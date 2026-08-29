@@ -291,7 +291,7 @@
   <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales de réparation Apple</a> ·
   <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits des consommateurs — Apple</a> ·
   <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">Self Service Repair</a> ·
-  <a href="https://donotr469.popalazerk.com" target="_blank" rel="noopener">Tarifs de réparation Apple</a>
+  <a href="https://support.apple.com/fr-fr/iphone/repair/service" target="_blank" rel="noopener">Tarifs de réparation Apple</a>
 </div>
 
 <script>
@@ -327,7 +327,17 @@ const SCENARIOS = [
             <div class="callout">
               <p><strong>Rappel :</strong> Si le vendeur (Apple ou un revendeur agréé) vous impose le <strong>remplacement</strong> de votre produit plutôt que sa réparation, la garantie légale est <strong>renouvelée pour 2 ans</strong> à compter de ce remplacement.</p>
             </div>
-            <p>Sources : <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale de conformité — Service Public</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits des consommateurs — Apple</a></p>
+            <h3>La loi AGEC française et les indices de réparabilité et de durabilité</h3>
+            <p>La France a devancé la directive européenne avec la <strong>loi AGEC</strong> (Anti-gaspillage pour une économie circulaire) de 2020, qui introduit plusieurs dispositifs pionniers :</p>
+            <ul>
+              <li><strong>Indice de réparabilité</strong> (depuis 2021) : obligatoire pour les smartphones, ordinateurs, téléviseurs, lave-linge et autres produits. Un score de <strong>1 à 10</strong> affiché sur le produit indique sa facilité de réparation.</li>
+              <li><strong>Indice de durabilité</strong> (2025) : pour les téléviseurs (janvier 2025) et lave-linge (avril 2025), il complète l'indice de réparabilité en évaluant la durée de vie réelle du produit (score 1 à 10).</li>
+              <li><strong>Garantie d'accès aux pièces détachées</strong> : les fabricants doivent garantir la disponibilité des pièces pendant au moins 5 ans pour les produits électroniques.</li>
+            </ul>
+            <div class="callout">
+              <p><strong>Bon à savoir :</strong> La garantie légale est <strong>suspendue</strong> pendant la durée de la réparation en France — cette période ne compte pas dans le calcul des 2 ans.</p>
+            </div>
+            <p>Sources : <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale de conformité — Service Public</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits des consommateurs — Apple</a> · <a href="https://www.ecologie.gouv.fr/politiques-publiques/indice-reparabilite" target="_blank" rel="noopener">Indice de réparabilité — ecologie.gouv.fr</a> · <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000041410498" target="_blank" rel="noopener">Loi AGEC — Légifrance</a></p>
           </div>
         `
       },
@@ -522,6 +532,79 @@ const SCENARIOS = [
             <p>Sources : <a href="https://www.apple.com/fr/newsroom/2025/05/apple-launches-self-service-repair-for-ipad-expands-repair-programs/" target="_blank" rel="noopener">Apple Newsroom</a> · <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales de réparation</a></p>
           </div>
         `
+      },
+      {
+        id: "formulaire-eu",
+        label: "Formulaire européen (Annexe I)",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Annexe I</span> Le formulaire européen d'information sur la réparation</h2>
+            <p>La directive <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">(UE) 2024/1799</a> prévoit, en son <strong>Annexe I</strong>, un <strong>formulaire européen d'information sur la réparation</strong> harmonisé. Avant toute réparation hors garantie, le réparateur doit vous communiquer, par écrit ou sur un support durable, les informations essentielles.</p>
+            <div class="callout">
+              <p><strong>Objectif :</strong> Assurer la transparence et permettre au consommateur de comparer les offres de réparation en toute connaissance de cause, dans toute l'Union européenne.</p>
+            </div>
+            <h3>Champs obligatoires du formulaire (Annexe I)</h3>
+            <table class="price-table">
+              <tr><th>Champ</th><th>Description</th></tr>
+              <tr><td><strong>Identité du réparateur</strong></td><td>Nom, raison sociale du réparateur</td></tr>
+              <tr><td><strong>Adresse</strong></td><td>Adresse géographique complète</td></tr>
+              <tr><td><strong>Téléphone</strong></td><td>Numéro de contact</td></tr>
+              <tr><td><strong>Email</strong></td><td>Adresse électronique</td></tr>
+              <tr><td><strong>Bien à réparer</strong></td><td>Description et identification du produit</td></tr>
+              <tr><td><strong>Nature du défaut</strong></td><td>Description de la panne signalée</td></tr>
+              <tr><td><strong>Type de réparation</strong></td><td>Réparation, remplacement de pièce, etc.</td></tr>
+              <tr><td><strong>Prix</strong></td><td>Montant précis OU méthode de calcul + prix maximum</td></tr>
+              <tr><td><strong>Délai de réparation</strong></td><td>Estimation du temps nécessaire</td></tr>
+              <tr><td><strong>Appareil de remplacement</strong></td><td>Disponibilité ou non d'un appareil de prêt</td></tr>
+              <tr><td><strong>Lieu de remise du bien</strong></td><td>Où récupérer le produit réparé</td></tr>
+              <tr><td><strong>Services annexes</strong></td><td>Transport, installation, etc.</td></tr>
+            </table>
+            <div class="callout warn">
+              <p><strong>Période de validité :</strong> Le formulaire doit rester valable pendant une période de <strong>minimum 30 jours</strong> après sa communication au consommateur.</p>
+            </div>
+            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive (UE) 2024/1799 — Annexe I</a> · <a href="https://commission.europa.eu/law/law-topic/consumer-protection-law/directive-repair-goods_en" target="_blank" rel="noopener">Commission européenne</a> · <a href="https://www.europe-consommateurs.eu/" target="_blank" rel="noopener">Europe des consommateurs</a></p>
+          </div>
+        `
+      },
+      {
+        id: "france",
+        label: "Mesures françaises (loi AGEC, bonus)",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag green">France</span> Les dispositifs français en faveur de la réparation</h2>
+            <p>La France est pionnière en Europe avec la <strong>loi AGEC</strong> (Anti-gaspillage pour une économie circulaire, 2020) et plusieurs mesures incitatives :</p>
+            <h3>Le bonus réparation</h3>
+            <p>Depuis le 1<sup>er</sup> janvier 2022, un <strong>bonus réparation</strong> finance une partie du coût de réparation pour les particuliers. Il est financé par l'éco-organisme <a href="https://www.ecosysteme.eco/" target="_blank" rel="noopener">écosystème.eco</a> et accessible uniquement via les réparateurs labellisés <strong>QualiRépar</strong>.</p>
+            <table class="price-table">
+              <tr><th>Produit</th><th>Bonus</th></tr>
+              <tr><td>Petit électroménager</td><td class="price">15 € à 25 €</td></tr>
+              <tr><td>Gros électroménager</td><td class="price">25 € à 45 €</td></tr>
+              <tr><td>Smartphones, tablettes, ordinateurs</td><td class="price">15 € à 45 €</td></tr>
+              <tr><td>TV, écrans</td><td class="price">20 € à 60 €</td></tr>
+            </table>
+            <div class="callout">
+              <p><strong>Bonus textiles et chaussures</strong> (depuis 2023) : de <strong>6 € à 25 €</strong> selon le produit, via les réparateurs labellisés <strong>Refashion</strong>.</p>
+            </div>
+            <h3>QualiRépar : le label des réparateurs</h3>
+            <p>Le label <strong>QualiRépar</strong> garantit la compétence des réparateurs et l'accès au bonus réparation. Il est délivré sous conditions de qualifications professionnelles et de respect d'un cahier des charges.</p>
+            <h3>Indices de réparabilité et de durabilité</h3>
+            <ul>
+              <li><strong>Indice de réparabilité</strong> (depuis 2021) : score 1 à 10, obligatoire pour smartphones, ordinateurs, TVs, lave-linge, etc.</li>
+              <li><strong>Indice de durabilité</strong> (2025) : pour téléviseurs (janv. 2025) et lave-linge (avr. 2025), score 1 à 10</li>
+            </ul>
+            <h3>Lutte contre l'obsolescence programmée</h3>
+            <div class="callout warn">
+              <p><strong>Sanctions pénales :</strong> L'obsolescence programmée est un délit pénal en France, passible de <strong>jusqu'à 2 ans de prison</strong> et <strong>300 000 € d'amende</strong>. Sont également interdites les techniques empêchant la réparation par un tiers.</p>
+            </div>
+            <h3>Autres mesures</h3>
+            <ul>
+              <li>Pièces détachées disponibles <strong>minimum 5 ans</strong> pour les produits électroniques</li>
+              <li>Garantie suspendue pendant la réparation</li>
+              <li>Plateforme ADEME : <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">epargnonsnosressources.gouv.fr</a></li>
+            </ul>
+            <p>Sources : <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000041410498" target="_blank" rel="noopener">Loi AGEC — Légifrance</a> · <a href="https://www.ecologie.gouv.fr/politiques-publiques/indice-reparabilite" target="_blank" rel="noopener">ecologie.gouv.fr</a> · <a href="https://www.ecosysteme.eco/" target="_blank" rel="noopener">écosystème.eco</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a></p>
+          </div>
+        `
       }
     ]
   },
@@ -619,6 +702,90 @@ const SCENARIOS = [
         `
       },
       {
+        id: "europe",
+        label: "Mesures par pays en Europe",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Europe</span> Mesures nationales en faveur de la réparation</h2>
+            <p>Au-delà de la directive européenne commune, de nombreux États membres ont adopté des mesures nationales incitatives pour encourager la réparation :</p>
+            <table class="price-table">
+              <tr><th>Pays</th><th>Mesure</th><th>Détail</th></tr>
+              <tr><td>Autriche</td><td>Bon de réparation</td><td class="price">Jusqu'à 50% (max 200 €), site <a href="https://www.reparaturbonus.at/" target="_blank" rel="noopener">reparaturbonus.at</a></td></tr>
+              <tr><td>Allemagne</td><td>Fonds de réparation</td><td class="price">Thuringe et Saxe</td></tr>
+              <tr><td>Belgique</td><td>TVA réduite</td><td class="price">6% sur petites réparations</td></tr>
+              <tr><td>Suède</td><td>TVA réduite + déduction fiscale</td><td class="price">TVA 12% (au lieu de 25%), réduction d'impôt 50%</td></tr>
+              <tr><td>Portugal</td><td>Pièces + TVA</td><td class="price">Pièces 10 ans, TVA 6%</td></tr>
+              <tr><td>Pologne</td><td>Pièces + TVA</td><td class="price">Pièces 7–10 ans, TVA 8%</td></tr>
+              <tr><td>Finlande</td><td>Présomption de défaut</td><td class="price">Produit défectueux si durée de vie &lt; attendue</td></tr>
+              <tr><td>France</td><td>Bonus réparation + indices</td><td class="price">15 € à 60 €, QualiRépar, loi AGEC</td></tr>
+            </table>
+            <div class="callout">
+              <p><strong>TVA réduite :</strong> Plusieurs pays appliquent une TVA réduite sur les réparations (Belgique 6%, Suède 12%, Portugal 6%, Pologne 8%), une mesure fiscale efficace pour réduire le coût pour le consommateur.</p>
+            </div>
+            <p>Sources : <a href="https://www.europe-consommateurs.eu/" target="_blank" rel="noopener">Europe des consommateurs</a> · <a href="https://www.touteleurope.eu/" target="_blank" rel="noopener">Toute l'Europe</a> · <a href="https://commission.europa.eu/law/law-topic/consumer-protection-law/directive-repair-goods_en" target="_blank" rel="noopener">Commission européenne</a></p>
+          </div>
+        `
+      },
+      {
+        id: "sanctions",
+        label: "Sanctions et lois nationales",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag red">Sanctions</span> Sanctions et transposition nationale</h2>
+            <p>La directive <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">(UE) 2024/1799</a> exige des États membres qu'ils fixent des sanctions « <strong>effectives, proportionnées et dissuasives</strong> » en cas de violation par un fabricant.</p>
+            <div class="callout warn">
+              <p><strong>27 lois nationales distinctes :</strong> Chacun des 27 États membres transpose la directive en droit national. Il existe donc <strong>27 lois nationales de transposition</strong>, chacune avec ses propres sanctions.</p>
+            </div>
+            <h3>Sanctions en France</h3>
+            <ul>
+              <li><strong>Obsolescence programmée</strong> : jusqu'à <strong>2 ans de prison</strong> et <strong>300 000 € d'amende</strong> (loi AGEC)</li>
+              <li><strong>Techniques empêchant la réparation par un tiers</strong> : interdites et sanctionnées</li>
+              <li><strong>Non-respect de l'obligation de réparation</strong> : sanctions administratives et civiles</li>
+            </ul>
+            <h3>Principes communs aux 27 États</h3>
+            <ul>
+              <li>Les sanctions doivent être <strong>effectives</strong> (véritablement applicables)</li>
+              <li>Elles doivent être <strong>proportionnées</strong> à la gravité de l'infraction</li>
+              <li>Elles doivent être <strong>dissuasives</strong> (de nature à dissuader les récidives)</li>
+              <li>Les autorités nationales de protection des consommateurs assurent le contrôle</li>
+            </ul>
+            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive (UE) 2024/1799</a> · <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000041410498" target="_blank" rel="noopener">Loi AGEC — Légifrance</a> · <a href="https://www.europe-consommateurs.eu/" target="_blank" rel="noopener">Europe des consommateurs</a></p>
+          </div>
+        `
+      },
+      {
+        id: "empowerment",
+        label: "Empowerment des consommateurs (2024/825)",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Empowerment</span> Directive sur l'empowerment des consommateurs</h2>
+            <p>La <strong>directive (UE) 2024/825</strong> sur l'empowerment des consommateurs pour la transition verte complète la directive réparation. Elle est <strong>applicable à partir du 27 septembre 2026</strong>.</p>
+            <div class="callout">
+              <p><strong>Date clé :</strong> 27 septembre 2026 — entrée en application de la directive (UE) 2024/825 dans tous les États membres.</p>
+            </div>
+            <h3>Pratiques interdites</h3>
+            <ul>
+              <li><strong>Masquer</strong> qu'une mise à jour logicielle <strong>dégrade</strong> les performances ou la fonctionnalité du produit</li>
+              <li><strong>Présenter une mise à jour comme nécessaire</strong> alors qu'elle ne fait qu'améliorer un aspect non essentiel</li>
+              <li>Commiquer pour <strong>limiter la durabilité</strong> intentionnelle du produit</li>
+              <li><strong>Inciter à remplacer</strong> des consommables (encre, cartouches, filtres) avant la justification technique réelle</li>
+            </ul>
+            <h3>Données chiffrées de la justification</h3>
+            <table class="price-table">
+              <tr><th>Indicateur</th><th>Valeur annuelle</th></tr>
+              <tr><td>Pertes pour les consommateurs européens (remplacement au lieu de réparation)</td><td class="price">12 milliards €</td></tr>
+              <tr><td>Déchets générés</td><td class="price">35 millions de tonnes</td></tr>
+              <tr><td>Émissions de CO₂ équivalent</td><td class="price">261 millions de tonnes</td></tr>
+              <tr><td>Ressources consommées</td><td class="price">30 millions de tonnes</td></tr>
+            </table>
+            <div class="callout">
+              <p><strong>Bilan :</strong> La réparation plutôt que le remplacement permettrait d'économiser <strong>12 milliards d'euros</strong> par an pour les consommateurs européens, d'éviter <strong>35 millions de tonnes de déchets</strong> et <strong>261 millions de tonnes de CO₂</strong>.</p>
+            </div>
+            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/825/oj" target="_blank" rel="noopener">Directive (UE) 2024/825</a> · <a href="https://commission.europa.eu/law/law-topic/consumer-protection-law/empowering-consumer-green-transition_en" target="_blank" rel="noopener">Commission européenne</a> · <a href="https://www.touteleurope.eu/" target="_blank" rel="noopener">Toute l'Europe</a></p>
+          </div>
+        `
+      },
+      {
         id: "applecare",
         label: "AppleCare+ et AppleCare One",
         render: () => `
@@ -693,6 +860,10 @@ const SCENARIOS = [
                 <div class="desc">Apple annonce l'autorisation d'utiliser des <strong>pièces d'occasion</strong> pour les réparations d'iPhone, et le lancement du MacBook Neo, son Mac le plus réparable en 15 ans.</div>
               </div>
               <div class="timeline-item">
+                <div class="time">2025</div>
+                <div class="desc">Mise en place des <strong>indices de durabilité</strong> en France : pour les téléviseurs (janvier 2025) et les lave-linge (avril 2025), complétant l'indice de réparabilité.</div>
+              </div>
+              <div class="timeline-item">
                 <div class="time">28 mai 2025</div>
                 <div class="desc">Apple étend Self Service Repair à l'<strong>iPad</strong> (iPad Air M2+, iPad Pro M4, iPad mini A17 Pro, iPad A16). Le programme couvre désormais 65 produits dans 34 pays.</div>
               </div>
@@ -701,11 +872,105 @@ const SCENARIOS = [
                 <div class="desc"><strong>Entrée en application</strong> de la directive dans les 27 États membres. Les fabricants ont désormais l'obligation de réparer les produits couverts à un prix raisonnable, même hors garantie.</div>
               </div>
               <div class="timeline-item">
-                <div class="time">2027</div>
+                <div class="time">27 septembre 2026</div>
+                <div class="desc">Entrée en application de la <strong>directive (UE) 2024/825</strong> sur l'empowerment des consommateurs pour la transition verte : interdiction de masquer la dégradation logicielle, de limiter la durabilité, etc.</div>
+              </div>
+              <div class="timeline-item">
+                <div class="time">Janvier 2028</div>
                 <div class="desc">Mise en place, dans chaque pays européen, d'une <strong>plateforme numérique</strong> pour trouver un réparateur, un vendeur de produits reconditionnés ou des initiatives de réparation participatives.</div>
               </div>
             </div>
-            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">EUR-Lex</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> · <a href="https://www.apple.com/fr/newsroom/2025/05/apple-launches-self-service-repair-for-ipad-expands-repair-programs/" target="_blank" rel="noopener">Apple Newsroom</a></p>
+            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">EUR-Lex</a> · <a href="http://data.europa.eu/eli/dir/2024/825/oj" target="_blank" rel="noopener">Directive (UE) 2024/825</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> · <a href="https://www.ecologie.gouv.fr/politiques-publiques/indice-reparabilite" target="_blank" rel="noopener">ecologie.gouv.fr</a> · <a href="https://www.apple.com/fr/newsroom/2025/05/apple-launches-self-service-repair-for-ipad-expands-repair-programs/" target="_blank" rel="noopener">Apple Newsroom</a></p>
+          </div>
+        `
+      }
+    ]
+  },
+  {
+    id: "products",
+    label: "Produits concernés",
+    subSections: [
+      {
+        id: "annexe-ii",
+        label: "Annexe II complète",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Annexe II</span> Les 10 catégories de produits réparables</h2>
+            <p>La directive <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">(UE) 2024/1799</a> renvoie à l'<strong>Annexe II</strong>, qui liste les catégories de produits soumis aux règles d'écoconception et au droit à la réparation. Voici les <strong>10 catégories</strong> avec leurs règlements d'application :</p>
+            <table class="price-table">
+              <tr><th>N°</th><th>Catégorie de produit</th><th>Règlement applicable</th></tr>
+              <tr><td>1</td><td>Lave-linge et lave-linge séchants</td><td class="price">Règlement (UE) 2019/2023</td></tr>
+              <tr><td>2</td><td>Lave-vaisselle</td><td class="price">Règlement (UE) 2019/2022</td></tr>
+              <tr><td>3</td><td>Appareils de réfrigération</td><td class="price">Règlement (UE) 2019/2019</td></tr>
+              <tr><td>4</td><td>Écrans électroniques (téléviseurs)</td><td class="price">Règlement (UE) 2019/2021</td></tr>
+              <tr><td>5</td><td>Équipements de soudage</td><td class="price">Règlement (UE) 2019/1784</td></tr>
+              <tr><td>6</td><td>Aspirateurs</td><td class="price">Règlement (UE) 666/2013</td></tr>
+              <tr><td>7</td><td>Serveurs et produits de stockage</td><td class="price">Règlement (UE) 2019/424</td></tr>
+              <tr><td>8</td><td>Téléphones portables, téléphones sans fil et tablettes</td><td class="price">Règlement (UE) 2023/1670</td></tr>
+              <tr><td>9</td><td>Sèche-linge ménagers</td><td class="price">Règlement (UE) 2023/2533</td></tr>
+              <tr><td>10</td><td>Batteries (véhicules légers)</td><td class="price">Règlement (UE) 2023/1542</td></tr>
+            </table>
+            <div class="callout">
+              <p><strong>Mise à jour annuelle :</strong> La liste des produits concernés est actualisée chaque année au niveau européen par la Commission, au fur et à mesure de l'adoption de nouveaux règlements d'écoconception.</p>
+            </div>
+            <p>Sources : <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive (UE) 2024/1799 — Annexe II</a> · <a href="https://commission.europa.eu/energy-climate-change-environment/standards-tools-and-labels/products-labelling-rules/energy-label-and-ecodesign/about_en" target="_blank" rel="noopener">Commission européenne — Écoconception</a></p>
+          </div>
+        `
+      },
+      {
+        id: "durees",
+        label: "Durées par produit",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Durées</span> Durée d'obligation de réparation par produit</h2>
+            <p>L'obligation de réparation hors garantie s'applique pendant une durée déterminée par les <strong>règlements d'écoconception</strong> applicables à chaque catégorie de produit :</p>
+            <table class="price-table">
+              <tr><th>Produit</th><th>Durée d'obligation</th><th>Règlement</th></tr>
+              <tr><td>Appareils de réfrigération</td><td class="price">7 ans</td><td>Règlement (UE) 2019/2019</td></tr>
+              <tr><td>Lave-linge</td><td class="price">10 ans</td><td>Règlement (UE) 2019/2023</td></tr>
+              <tr><td>Lave-vaisselle</td><td class="price">10 ans</td><td>Règlement (UE) 2019/2022</td></tr>
+              <tr><td>Sèche-linge</td><td class="price">10 ans</td><td>Règlement (UE) 2023/2533</td></tr>
+              <tr><td>Smartphones et tablettes</td><td class="price">5 à 10 ans</td><td>Règlement (UE) 2023/1670</td></tr>
+              <tr><td>Aspirateurs</td><td class="price">10 ans</td><td>Règlement (UE) 666/2013</td></tr>
+              <tr><td>Écrans électroniques (TV)</td><td class="price">7 à 10 ans</td><td>Règlement (UE) 2019/2021</td></tr>
+            </table>
+            <div class="callout">
+              <p><strong>Pour les smartphones et tablettes</strong> (règlement 2023/1670) : la durée varie de <strong>5 à 10 ans</strong> selon le type de pièce de rechange concernée. Les pièces critiques (batterie, écran) sont disponibles pour la durée la plus longue.</p>
+            </div>
+            <h3>Comment connaître la durée pour votre produit ?</h3>
+            <ul>
+              <li>Consultez le manuel d'utilisation ou la fiche technique du fabricant</li>
+              <li>Vérifiez la disponibilité des pièces sur le site du fabricant</li>
+              <li>Référez-vous au règlement d'écoconception applicable</li>
+            </ul>
+            <p>Sources : <a href="http://data.europa.eu/eli/reg/2023/1670/oj" target="_blank" rel="noopener">Règlement (UE) 2023/1670</a> · <a href="https://commission.europa.eu/energy-climate-change-environment/standards-tools-and-labels/products-labelling-rules/energy-label-and-ecodesign/about_en" target="_blank" rel="noopener">Commission européenne</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a></p>
+          </div>
+        `
+      },
+      {
+        id: "apple-annexe",
+        label: "Apple et l'Annexe II",
+        render: () => `
+          <div class="info-card">
+            <h2><span class="tag">Apple</span> Apple et l'Annexe II : où se situent iPhone et iPad ?</h2>
+            <p>Les produits Apple ne figurent pas nominativement dans l'Annexe II, mais ils relèvent des catégories réglementées :</p>
+            <h3>iPhone = Smartphones</h3>
+            <p>L'iPhone entre dans la catégorie <strong>« Téléphones portables, téléphones sans fil et tablettes »</strong> (catégorie n°8 de l'Annexe II), soumise au <strong>règlement (UE) 2023/1670</strong>. Apple a l'obligation de fournir des pièces de rechange et d'accepter les réparations pendant <strong>5 à 10 ans</strong> après l'achat.</p>
+            <h3>iPad = Tablettes</h3>
+            <p>L'iPad entre dans la <strong>même catégorie</strong> (n°8, règlement 2023/1670). Les tablettes numériques bénéficient des mêmes obligations de réparabilité que les smartphones.</p>
+            <div class="callout">
+              <p><strong>Mac et Apple Watch :</strong> Les MacBook et Apple Watch ne figurent pas explicitement dans l'Annexe II actuelle. La liste des produits concernés est néanmoins <strong>actualisée chaque année</strong>, et pourrait être étendue à ces catégories.</p>
+            </div>
+            <h3>Programmes Apple de réparation</h3>
+            <ul>
+              <li><strong>Self Service Repair</strong> : 65 produits couverts, 34 pays, location d'outils 59,95 €/semaine</li>
+              <li><strong>Genuine Parts Distributor</strong> : MobileSentrix, Mobileparts.shop</li>
+              <li><strong>Pièces d'occasion autorisées</strong> depuis avril 2025</li>
+              <li><strong>MacBook Neo</strong> : le Mac le plus réparable en 15 ans</li>
+              <li>Environ <strong>5 000 sites de réparation</strong> et <strong>100 000 techniciens</strong> dans le monde</li>
+              <li><strong>8 clients européens sur 10</strong> à moins de 30 minutes d'un réparateur</li>
+            </ul>
+            <p>Sources : <a href="http://data.europa.eu/eli/reg/2023/1670/oj" target="_blank" rel="noopener">Règlement (UE) 2023/1670</a> · <a href="https://www.apple.com/fr/newsroom/2025/05/apple-launches-self-service-repair-for-ipad-expands-repair-programs/" target="_blank" rel="noopener">Apple Newsroom</a> · <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">Self Service Repair</a></p>
           </div>
         `
       }
