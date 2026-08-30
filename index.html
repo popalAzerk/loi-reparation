@@ -487,13 +487,15 @@ function getResult(s) {
   const pr = s["prior-repair"];
   if (pr === "apple-repair") {
     cards.push({ title:"Réparation antérieure par Apple", tag:"green", tagLabel:"Garantie prolongée", body:`
-      <p><strong>Effet sur la garantie :</strong> la réparation sous garantie prolonge la garantie légale d'<strong>un an</strong> (directive 2024/1799, art. 13).</p>
+      <p><strong>Si la réparation était sous garantie légale (défaut de conformité) :</strong> garantie prolongée d'<strong>un an</strong> (directive 2024/1799, art. 17).</p>
+      <p><strong>Si la réparation était hors garantie (payante) :</strong> pas de prolongation de garantie légale. Garantie commerciale Apple de 90 jours sur la réparation.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
-        <p>Si le client a choisi la réparation plutôt que le remplacement pendant la garantie légale, la garantie est <strong>prolongée d'un an</strong> à compter de la réparation. Avant la directive 2024/1799, la prolongation n'était que de 6 mois.</p>
-        <p>Exemple : achat en janvier 2026, réparation en juin 2027 → garantie jusqu'en juin 2028 (au lieu de janvier 2028).</p>
-        <p>La réparation par Apple n'affecte pas la garantie pour les défauts non liés à la réparation. Toutefois, les dommages causés pendant la réparation sont couverts par la garantie Apple sur la réparation elle-même (90 jours ou fin de garantie, selon ce qui est plus long).</p>
-        <p><a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive 2024/1799, art. 13</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a></p>
+        <p><strong>Réparation sous garantie (art. 17) :</strong> si le client a choisi la réparation plutôt que le remplacement pendant la garantie légale de conformité (2 ans), la garantie est <strong>prolongée d'un an</strong> à compter de la restitution. Avant la directive 2024/1799, la prolongation n'était que de 6 mois.</p>
+        <p>Exemple : achat en janvier 2026, défaut en juin 2027 (sous garantie), réparation choisie → garantie jusqu'en juin 2028 (au lieu de janvier 2028).</p>
+        <p><strong>Réparation hors garantie (art. 4) :</strong> une réparation payante effectuée après la période de garantie (droit à la réparation) ne prolonge <strong>pas</strong> la garantie légale. Le fabricant doit réparer à prix raisonnable, mais l'article 17 ne s'applique pas. Apple offre une garantie commerciale de 90 jours sur la réparation effectuée.</p>
+        <p>Exemple : achat en janvier 2024, écran cassé en juin 2026 (hors garantie), réparation payante → pas de prolongation de garantie légale. Garantie Apple de 90 jours sur la réparation uniquement.</p>
+        <p><a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive 2024/1799, art. 4 et 17</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a></p>
       </div>
     `});
   } else if (pr === "apple-replace") {
