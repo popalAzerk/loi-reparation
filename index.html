@@ -207,9 +207,8 @@ const QUESTIONS = [
     label: "Lieu d'achat",
     options: [
       { value: "apple-store", label: "Apple Store" },
-      { value: "authorized", label: "Revendeur agréé" },
-      { value: "other-new", label: "Autre magasin (neuf)" },
-      { value: "secondhand", label: "Occasion / reconditionné" }
+      { value: "other", label: "Autre vendeur (revendeur agréé, Fnac, Darty, Amazon…)" },
+      { value: "secondhand", label: "Occasion" }
     ]
   },
   {
@@ -268,7 +267,7 @@ function getResult(s) {
   // 2. Apple est le FABRICANT + produit Annexe II + 2-10 ans + défaut → PAYANT (droit à la réparation)
   // 3. Remplacement antérieur sous garantie → garantie renouvelée 2 ans → GRATUIT
 
-  const isAppleVendor = (s.purchase === "apple-store" || s.purchase === "reseller");
+  const isAppleVendor = (s.purchase === "apple-store");
   const isAnnexII = p.annexII;
   const isDefect = (s.condition === "defect" || s.condition === "battery");
   const isAccidental = (s.condition === "accidental" || s.condition === "liquid");
@@ -454,7 +453,7 @@ function getResult(s) {
 
   if (isUnderWarranty && isDefect && s.purchase !== "secondhand") {
     revendeurEligible = true;
-    revendeurReason = `Le <strong>vendeur</strong> (${s.purchase === "apple-store" ? "Apple Store" : s.purchase === "reseller" ? "revendeur agréé" : "le magasin d'achat"}) est responsable de la garantie légale de conformité (2 ans).`;
+    revendeurReason = `Le <strong>vendeur</strong> (${s.purchase === "apple-store" ? "Apple Store" : "le magasin d'achat"}) est responsable de la garantie légale de conformité (2 ans).`;
     revendeurCost = "Gratuit";
   } else if (isUnderWarranty && isDefect && s.purchase === "secondhand") {
     revendeurEligible = true;
