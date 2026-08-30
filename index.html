@@ -263,14 +263,18 @@ function getResult(s) {
   }
   // --- SOUS GARANTIE (< 2 ans) ---
   else if (s.age === "under-2") {
-    if (s.condition === "defect" || s.condition === "battery") {
+    if (s.condition === "defect") {
       verdict = "eligible";
-      title = "Garantie légale de conformité";
-      summary = "Défaut couvert par la garantie légale (2 ans). Réparation ou remplacement gratuit. Prolongation d'un an si réparation choisie.";
+      title = "Garantie légale de conformité — Vendeur responsable";
+      summary = "Défaut de conformité couvert par la garantie légale (2 ans). Le vendeur (Apple Store ou revendeur) doit réparer ou remplacer gratuitement. 1ère année : présomption. 2ème année : le client prouve que le défaut existait à la livraison.";
+    } else if (s.condition === "battery") {
+      verdict = "eligible";
+      title = "Batterie < 80% — Remplacement gratuit";
+      summary = "Batterie dégradée couverte par la garantie légale (défaut de conformité) si < 80% de capacité. Remplacement gratuit par le vendeur.";
     } else {
       verdict = "partial";
-      title = "Hors garantie légale, AppleCare si souscrit";
-      summary = "Dommage accidentel/liquide non couvert par la garantie légale. AppleCare+ couvre avec franchise. Sinon tarif hors garantie.";
+      title = "Hors garantie légale — AppleCare si souscrit";
+      summary = "Dommage accidentel/liquide non couvert par la garantie légale. AppleCare+ couvre avec franchise. Sinon tarif hors garantie. Le vendeur n'est pas responsable.";
     }
   }
   // --- 2–5 ans ---
@@ -311,13 +315,18 @@ function getResult(s) {
   // --- CARDS ---
 
   // 1. VERDICT DETAIL
-  if (verdict === "eligible" && s.age === "under-2" && (s.condition === "defect" || s.condition === "battery")) {
+  if (verdict === "eligible" && s.age === "under-2" && s.condition === "defect") {
+    const isYear1 = true; // On ne peut pas savoir, on affiche les deux cas
     cards.push({ title:"Garantie légale — Procédure", tag:"green", tagLabel:"Procédure", body:`
-      <p><strong>Action :</strong> Réparation ou remplacement gratuit. Le client choisit réparation → garantie prolongée d'un an.</p>
-      <p><strong>Si remplacement imposé :</strong> garantie renouvelée 2 ans.</p>
+      <p><strong>Responsable :</strong> le <strong>vendeur</strong> (Apple Store ou revendeur agréé), pas Apple en tant que fabricant.</p>
+      <p><strong>1ère année :</strong> présomption que le défaut existait à la livraison — réparation/remplacement gratuit sans conditions.</p>
+      <p><strong>2ème année :</strong> le <strong>client doit prouver</strong> que le défaut existait au moment de l'achat.</p>
+      <p><strong>Si réparation choisie :</strong> garantie prolongée d'un an. <strong>Si remplacement imposé :</strong> garantie renouvelée 2 ans.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
-        <p>La garantie légale de conformité (2 ans) couvre les défauts existant au moment de la livraison. Elle s'ajoute à la garantie limitée d'Apple d'1 an — c'est la garantie légale qui prévaut en France.</p>
+        <p>La garantie légale de conformité dure <strong>2 ans</strong> et oppose le client au <strong>vendeur</strong> (pas au fabricant). En France, Apple Store et revendeurs agréés sont vendeurs et donc responsables.</p>
+        <p><strong>1ère année (0–24 mois) :</strong> le défaut est présumé exister au moment de la livraison. Le vendeur ne peut pas refuser la réparation gratuite. C'est au vendeur de prouver le contraire s'il conteste.</p>
+        <p><strong>2ème année (12–24 mois) :</strong> la présomption s'inverse. Le <strong>client doit apporter la preuve</strong> que le défaut existait au moment de l'achat (expertise, etc.). Le vendeur reste responsable mais peut contester plus facilement.</p>
         <p>Depuis le 31 juillet 2026, la directive (UE) 2024/1799 prolonge la garantie d'<strong>un an</strong> (contre 6 mois avant) si le client choisit la réparation plutôt que le remplacement.</p>
         <p>Apple peut utiliser des pièces « d'origine Apple neuves et/ou précédemment utilisées, testées et répondant aux exigences fonctionnelles d'Apple ».</p>
         <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale — Service Public</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits consommateurs — Apple</a></p>
@@ -326,12 +335,12 @@ function getResult(s) {
   }
 
   if (verdict === "eligible" && (s.age === "2-5" || s.age === "5-10") && p.annexII && (s.condition === "defect" || s.condition === "battery")) {
-    cards.push({ title:"Droit à la réparation — Procédure", tag:"green", tagLabel:"Procédure", body:`
-      <p><strong>Action :</strong> Accepter la réparation. Prix raisonnable, délai convenable. Le client peut l'exiger.</p>
+    cards.push({ title:"Droit à la réparation — Procédure", tag:"orange", tagLabel:"Payant", body:`
+      <p><strong>Responsable :</strong> le <strong>fabricant</strong> (Apple), pas le vendeur. Réparation <strong>payante</strong> à prix raisonnable.</p>
       <p><strong>Apple ne peut pas refuser pour :</strong> coût des pièces, réparation antérieure par un tiers.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
-        <p>La directive (UE) 2024/1799 impose aux fabricants de réparer les produits de l'Annexe II à un prix raisonnable, pendant 5 à 10 ans après l'achat.</p>
+        <p>La directive (UE) 2024/1799 impose au <strong>fabricant</strong> (Apple Inc.) de réparer les produits de l'Annexe II à un prix raisonnable, pendant 5 à 10 ans après l'achat. Ce n'est <strong>pas gratuit</strong> — c'est une obligation d'accepter la réparation, pas de la financer.</p>
         <p>Le ${p.name} figure dans l'Annexe II via le <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1670" target="_blank" rel="noopener">règlement (UE) ${p.reg}</a> sur l'écoconception.</p>
         <p>Le prix « raisonnable » n'est pas défini précisément, mais Apple doit publier les tarifs indicatifs des réparations courantes. Le coût ne doit pas dissuader intentionnellement la réparation.</p>
         <p>Options : Apple Store, envoi postal, Self Service Repair, réparateur indépendant (Genuine Parts Distributor).</p>
