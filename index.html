@@ -315,6 +315,46 @@ function getResult(s) {
 
   // --- CARDS ---
 
+  // 0. ÉLIGIBILITÉ RÉPARATION EN APPLE STORE (toujours en premier)
+  const canAppleStore =
+    (verdict === "eligible") ||
+    (s.age === "2-5" && p.annexII && (s.condition === "defect" || s.condition === "battery")) ||
+    (s.age === "5-10" && p.annexII && (s.condition === "defect" || s.condition === "battery")) ||
+    (s.condition === "accidental" || s.condition === "liquid") ||
+    (s.condition === "battery");
+
+  let appleStoreBody = "";
+  if (canAppleStore) {
+    const reason = verdict === "eligible" ? "Garantie légale de conformité — le vendeur (Apple Store si achat sur place) doit réparer gratuitement." :
+      (s.age === "2-5" || s.age === "5-10") && p.annexII ? "Droit à la réparation (directive 2024/1799) — Apple (fabricant) doit accepter la réparation, payant à prix raisonnable." :
+      (s.condition === "accidental" || s.condition === "liquid") ? "Réparation hors garantie acceptée en Apple Store — payant (ou AppleCare+ avec franchise)." :
+      s.condition === "battery" ? "Remplacement de batterie accepté en Apple Store — gratuit sous garantie/AppleCare, payant sinon." : "";
+    appleStoreBody = `
+      <p><strong>✅ Oui — Réparation possible en Apple Store.</strong></p>
+      <p>${reason}</p>
+      <p>Prendre rendez-vous : <a href="https://www.apple.com/fr/shop/repair" target="_blank" rel="noopener">apple.com/fr/shop/repair</a></p>
+    `;
+  } else {
+    let alt = "";
+    if (s.purchase === "other" && s.age === "under-2") {
+      alt = `Le vendeur (ex: Fnac, Darty, Amazon) est responsable de la garantie légale, pas l'Apple Store. <strong>S'adresser au magasin d'achat.</strong><br><br>Alternatives : <a href="https://www.apple.com/fr/shop/repair" target="_blank" rel="noopener">Réparation payante en Apple Store</a> · <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">Réparateur QualiRépar</a>`;
+    } else if (s.age === "over-10") {
+      alt = `Garantie légale et droit à la réparation expirés. Apple Store peut refuser.<br><br>Alternatives : <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">Réparateur QualiRépar</a> (bonus 15–60€) · <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">Plateforme ADEME</a> · Réparateur indépendant`;
+    } else if (!p.annexII && (s.age === "2-5" || s.age === "5-10") && (s.condition === "defect" || s.condition === "battery")) {
+      alt = `${p.name} hors Annexe II : Apple n'est pas tenue d'accepter la réparation hors garantie. L'Apple Store peut refuser.<br><br>Alternatives : <a href="https://www.apple.com/fr/shop/repair" target="_blank" rel="noopener">Demander un devis Apple Store</a> · <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">Réparateur QualiRépar</a> (bonus 15–60€) · Réparateur indépendant`;
+    } else if (s.purchase === "secondhand" && s.age === "over-10") {
+      alt = `Aucune couverture. Apple Store peut refuser.<br><br>Alternatives : <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">Réparateur QualiRépar</a> (bonus 15–60€) · <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">Plateforme ADEME</a> · Réparateur indépendant`;
+    } else {
+      alt = `L'Apple Store n'est pas le bon interlocuteur pour cette situation.<br><br>Alternatives : <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">Réparateur QualiRépar</a> · <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">Plateforme ADEME</a> · <a href="https://www.apple.com/fr/shop/repair" target="_blank" rel="noopener">Devis Apple Store</a>`;
+    }
+    appleStoreBody = `
+      <p><strong>❌ Non — L'Apple Store n'est pas le bon interlocuteur.</strong></p>
+      <p>${alt}</p>
+    `;
+  }
+
+  cards.push({ title:"Éligibilité réparation en Apple Store", tag: canAppleStore ? "green" : "red", tagLabel: canAppleStore ? "Éligible" : "Non éligible", body: appleStoreBody });
+
   // 1. VERDICT DETAIL
   if (verdict === "eligible" && s.age === "under-2" && s.condition === "defect") {
     const isYear1 = true; // On ne peut pas savoir, on affiche les deux cas
