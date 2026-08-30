@@ -253,12 +253,12 @@ function getResult(s) {
       summary = "Achat d'occasion + plus de 10 ans : ni garantie légale, ni obligation de réparation. Réparation indépendante uniquement.";
     } else if (p.annexII) {
       verdict = "partial";
-      title = "Pas de garantie légale, droit à la réparation possible";
-      summary = `L'achat d'occasion n'est pas couvert par la garantie légale. Mais le ${p.name} figure dans l'Annexe II : Apple doit accepter une réparation à prix raisonnable pendant 5–10 ans.`;
+      title = "Garantie selon le vendeur, droit à la réparation possible";
+      summary = `Achat d'occasion à un professionnel : garantie légale de 2 ans applicable. Entre particuliers : pas de garantie légale. Dans tous les cas, le droit à la réparation (directive 2024/1799) s'applique auprès d'Apple pour le ${p.name} (Annexe II), indépendamment du mode d'achat.`;
     } else {
       verdict = "partial";
-      title = "Pas de garantie légale, pas d'obligation de réparation";
-      summary = `L'achat d'occasion n'est pas couvert par la garantie légale. Le ${p.name} n'est pas dans l'Annexe II : Apple n'est pas tenue d'accepter la réparation. Réparation payante possible.`;
+      title = "Garantie selon le vendeur, pas d'obligation de réparation";
+      summary = `Achat d'occasion à un professionnel : garantie légale de 2 ans. Entre particuliers : pas de garantie légale. Le ${p.name} n'est pas dans l'Annexe II : Apple n'est pas tenue d'accepter la réparation.`;
     }
   }
   // --- SOUS GARANTIE (< 2 ans) ---
@@ -266,7 +266,7 @@ function getResult(s) {
     if (s.condition === "defect") {
       verdict = "eligible";
       title = "Garantie légale de conformité — Vendeur responsable";
-      summary = "Défaut de conformité couvert par la garantie légale (2 ans). Le vendeur (Apple Store ou revendeur) doit réparer ou remplacer gratuitement. 1ère année : présomption. 2ème année : le client prouve que le défaut existait à la livraison.";
+      summary = "Défaut de conformité couvert par la garantie légale (2 ans). Le vendeur (Apple Store, revendeur agréé ou autre magasin) doit réparer ou remplacer gratuitement. 1er an : présomption. 2ème an : le client prouve que le défaut existait à la livraison.";
     } else if (s.condition === "battery") {
       verdict = "eligible";
       title = "Batterie < 80% — Remplacement gratuit";
@@ -280,9 +280,9 @@ function getResult(s) {
   // --- 2–5 ans ---
   else if (s.age === "2-5") {
     if (p.annexII && (s.condition === "defect" || s.condition === "battery")) {
-      verdict = "eligible";
-      title = "Droit à la réparation hors garantie";
-      summary = `${p.name} dans l'Annexe II (règlement ${p.reg}). Apple doit réparer à prix raisonnable. Payant mais obligatoire pour Apple.`;
+      verdict = "partial";
+      title = "Droit à la réparation hors garantie (payant)";
+      summary = `${p.name} dans l'Annexe II (règlement ${p.reg}). Apple (fabricant) doit accepter la réparation à prix raisonnable. Payant, pas gratuit.`;
     } else if (s.condition === "defect" || s.condition === "battery") {
       verdict = "partial";
       title = "Réparation payante, pas d'obligation légale";
@@ -319,14 +319,14 @@ function getResult(s) {
     const isYear1 = true; // On ne peut pas savoir, on affiche les deux cas
     cards.push({ title:"Garantie légale — Procédure", tag:"green", tagLabel:"Procédure", body:`
       <p><strong>Responsable :</strong> le <strong>vendeur</strong> (Apple Store ou revendeur agréé), pas Apple en tant que fabricant.</p>
-      <p><strong>1ère année :</strong> présomption que le défaut existait à la livraison — réparation/remplacement gratuit sans conditions.</p>
-      <p><strong>2ème année :</strong> le <strong>client doit prouver</strong> que le défaut existait au moment de l'achat.</p>
+      <p><strong>1er an (0–12 mois) :</strong> présomption que le défaut existait à la livraison — réparation/remplacement gratuit, au vendeur de prouver le contraire.</p>
+      <p><strong>2ème an (12–24 mois) :</strong> le <strong>client doit prouver</strong> que le défaut existait au moment de l'achat.</p>
       <p><strong>Si réparation choisie :</strong> garantie prolongée d'un an. <strong>Si remplacement imposé :</strong> garantie renouvelée 2 ans.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
         <p>La garantie légale de conformité dure <strong>2 ans</strong> et oppose le client au <strong>vendeur</strong> (pas au fabricant). En France, Apple Store et revendeurs agréés sont vendeurs et donc responsables.</p>
-        <p><strong>1ère année (0–24 mois) :</strong> le défaut est présumé exister au moment de la livraison. Le vendeur ne peut pas refuser la réparation gratuite. C'est au vendeur de prouver le contraire s'il conteste.</p>
-        <p><strong>2ème année (12–24 mois) :</strong> la présomption s'inverse. Le <strong>client doit apporter la preuve</strong> que le défaut existait au moment de l'achat (expertise, etc.). Le vendeur reste responsable mais peut contester plus facilement.</p>
+        <p><strong>1er an (0–12 mois) :</strong> le défaut est présumé exister au moment de la livraison. Le vendeur ne peut pas refuser la réparation gratuite. C'est au vendeur de prouver le contraire s'il conteste. La directive (UE) 2019/771 prévoit 24 mois, mais la transposition française (art. L217-7 Code de la consommation) fixe la présomption à 1 an — certains juges l'étendent à 2 ans au cas par cas.</p>
+        <p><strong>2ème an (12–24 mois) :</strong> la présomption s'inverse. Le <strong>client doit apporter la preuve</strong> que le défaut existait au moment de l'achat (expertise, etc.). Le vendeur reste responsable mais peut contester plus facilement.</p>
         <p>Depuis le 31 juillet 2026, la directive (UE) 2024/1799 prolonge la garantie d'<strong>un an</strong> (contre 6 mois avant) si le client choisit la réparation plutôt que le remplacement.</p>
         <p>Apple peut utiliser des pièces « d'origine Apple neuves et/ou précédemment utilisées, testées et répondant aux exigences fonctionnelles d'Apple ».</p>
         <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale — Service Public</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits consommateurs — Apple</a></p>
@@ -334,7 +334,7 @@ function getResult(s) {
     `});
   }
 
-  if (verdict === "eligible" && (s.age === "2-5" || s.age === "5-10") && p.annexII && (s.condition === "defect" || s.condition === "battery")) {
+  if ((verdict === "eligible" || verdict === "partial") && (s.age === "2-5" || s.age === "5-10") && p.annexII && (s.condition === "defect" || s.condition === "battery")) {
     cards.push({ title:"Droit à la réparation — Procédure", tag:"orange", tagLabel:"Payant", body:`
       <p><strong>Responsable :</strong> le <strong>fabricant</strong> (Apple), pas le vendeur. Réparation <strong>payante</strong> à prix raisonnable.</p>
       <p><strong>Apple ne peut pas refuser pour :</strong> coût des pièces, réparation antérieure par un tiers.</p>
@@ -352,11 +352,14 @@ function getResult(s) {
   // 2. BATTERY SPECIFIC
   if (s.condition === "battery") {
     cards.push({ title:"Batterie < 80%", tag:"green", tagLabel:"Batterie", body:`
-      <p><strong>Remplacement gratuit</strong> si batterie < 80% de capacité — garantie légale, AppleCare+ ou AppleCare One.</p>
+      <p><strong>Sous garantie (< 2 ans) :</strong> batterie < 80% = défaut de conformité probable → remplacement gratuit par le vendeur.</p>
+      <p><strong>Avec AppleCare+ / One :</strong> remplacement gratuit.</p>
+      <p><strong>Hors garantie, sans AppleCare :</strong> remplacement payant au tarif forfaitaire.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
-        <p>Apple remplace gratuitement la batterie lorsqu'elle conserve moins de 80% de sa capacité originale, quel que soit le contrat (garantie légale, AppleCare+, AppleCare One).</p>
-        <p>Sans AppleCare et hors garantie, le remplacement de batterie est payant au tarif forfaitaire (ex: 89€ iPhone, 289€ MacBook Pro 16"). Voir <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">l'outil de tarifs</a>.</p>
+        <p>Apple remplace gratuitement la batterie lorsqu'elle conserve moins de 80% de sa capacité originale, avec la garantie légale, AppleCare+ ou AppleCare One.</p>
+        <p><strong>Sous garantie légale :</strong> une batterie qui tombe sous 80% avant 2 ans peut être considérée comme un défaut de conformité. En 1ère année, c'est au vendeur de prouver qu'il s'agit d'usure normale. En 2ème année, le client doit prouver l'antériorité du défaut.</p>
+        <p>Sans AppleCare et hors garantie, le remplacement est payant (ex: 89€ iPhone, 289€ MacBook Pro 16"). Voir <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">l'outil de tarifs</a>.</p>
       </div>
     `});
   }
@@ -375,6 +378,7 @@ function getResult(s) {
           <tr><td>iPhone</td><td>29 €</td><td>99 €</td></tr>
           <tr><td>iPad</td><td>29 €</td><td>49–99 €</td></tr>
           <tr><td>Mac</td><td>99 €</td><td>259 €</td></tr>
+          <tr><td>MacBook Neo</td><td>59 €</td><td>179 €</td></tr>
           <tr><td>Apple Watch</td><td>—</td><td>65–75 €</td></tr>
           <tr><td>AirPods</td><td>—</td><td>29 €</td></tr>
           <tr><td>Vision Pro</td><td>—</td><td>299 €</td></tr>
@@ -393,7 +397,7 @@ function getResult(s) {
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
       <div class="expand-content">
         <p>La directive interdit aux fabricants de refuser une réparation parce qu'un tiers (ou le consommateur lui-même) a déjà réparé le produit.</p>
-        <p>Apple peut toutefois facturer un diagnostic (jusqu'à 100€ dans l'UE) si la panne résulte de la réparation antérieure. La garantie n'est pas affectée par une réparation Self Service Repair, mais tout dommage causé pendant l'opération ne sera pas couvert.</p>
+        <p>Apple peut toutefois facturer un diagnostic (jusqu'à 100€ dans l'UE) si : le produit ne requiert pas de réparation, la panne résulte de logiciels ou de pièces non-Apple, ou des dommages accidentels. La garantie n'est pas affectée par une réparation Self Service Repair (si les instructions Apple sont suivies), mais tout dommage causé pendant l'opération ne sera pas couvert. Une réparation par un tiers non agréé peut affecter la garantie pour les dommages causés par cette réparation.</p>
         <p>Apple doit être informée de toute modification non autorisée ou réparation par un tiers lors de la commande de service.</p>
         <p><a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive, considérant 24</a> · <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions Apple</a></p>
       </div>
@@ -410,9 +414,9 @@ function getResult(s) {
       <table class="price-table">
         <tr><th></th><th>Garantie légale</th><th>AppleCare+ / One</th></tr>
         <tr><td>Obligation</td><td>Légale (UE + FR)</td><td>Contractuelle</td></tr>
-        <tr><td>Durée</td><td>2 ans (+1 si réparation)</td><td>Tant que payé</td></tr>
+        <tr><td>Durée</td><td>2 ans (+1 si réparation)</td><td>Tant que l'abonnement est actif</td></tr>
         <tr><td>Prix</td><td>Gratuit</td><td>1,49–20,99 €/mois</td></tr>
-        <tr><td>Couverture</td><td>Défauts uniquement</td><td>Défauts + accidentel</td></tr>
+        <tr><td>Couverture</td><td>Défauts uniquement</td><td>Défauts + accidentel (2 incidents/12 mois)</td></tr>
         <tr><td>Responsable</td><td>Le vendeur</td><td>Apple</td></tr>
         <tr><td>Franchise</td><td>Aucune</td><td>29–299 €</td></tr>
       </table>
