@@ -219,11 +219,12 @@ const QUESTIONS = [
   },
   {
     id: "prior-repair",
-    label: "Réparation antérieure",
+    label: "Historique de l'appareil",
     options: [
-      { value: "none", label: "Jamais réparé" },
-      { value: "apple", label: "Par Apple / CSAA" },
-      { value: "third-party", label: "Par un tiers" },
+      { value: "none", label: "Jamais réparé ni remplacé" },
+      { value: "apple-repair", label: "Réparé par Apple / CSAA" },
+      { value: "apple-replace", label: "Remplacé par Apple (sous garantie)" },
+      { value: "third-party", label: "Réparé par un tiers" },
       { value: "self", label: "Self Service Repair" }
     ]
   }
@@ -389,9 +390,32 @@ function getResult(s) {
     `});
   }
 
-  // 4. RÉPARATION PAR UN TIERS
-  if (s["prior-repair"] === "third-party" || s["prior-repair"] === "self") {
-    const isSelf = s["prior-repair"] === "self";
+  // 4. RÉPARATION OU REMPLACEMENT ANTÉRIEUR
+  const pr = s["prior-repair"];
+  if (pr === "apple-repair") {
+    cards.push({ title:"Réparation antérieure par Apple", tag:"green", tagLabel:"Garantie prolongée", body:`
+      <p><strong>Effet sur la garantie :</strong> la réparation sous garantie prolonge la garantie légale d'<strong>un an</strong> (directive 2024/1799, art. 13).</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>Si le client a choisi la réparation plutôt que le remplacement pendant la garantie légale, la garantie est <strong>prolongée d'un an</strong> à compter de la réparation. Avant la directive 2024/1799, la prolongation n'était que de 6 mois.</p>
+        <p>Exemple : achat en janvier 2026, réparation en juin 2027 → garantie jusqu'en juin 2028 (au lieu de janvier 2028).</p>
+        <p>La réparation par Apple n'affecte pas la garantie pour les défauts non liés à la réparation. Toutefois, les dommages causés pendant la réparation sont couverts par la garantie Apple sur la réparation elle-même (90 jours ou fin de garantie, selon ce qui est plus long).</p>
+        <p><a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive 2024/1799, art. 13</a> · <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a></p>
+      </div>
+    `});
+  } else if (pr === "apple-replace") {
+    cards.push({ title:"Remplacement antérieur par Apple", tag:"green", tagLabel:"Garantie renouvelée", body:`
+      <p><strong>Effet sur la garantie :</strong> si le vendeur a <strong>imposé</strong> le remplacement pendant la garantie légale, celle-ci est <strong>renouvelée pour 2 ans</strong> sur l'appareil de remplacement.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>Le remplacement imposé par le vendeur (et non choisi par le client) renouvelle la garantie légale de conformité pour <strong>2 ans</strong> à compter de la date de remplacement (art. L217-11 du Code de la consommation).</p>
+        <p>Exemple : achat en janvier 2026, remplacement imposé en juin 2026 → garantie sur le nouvel appareil jusqu'en juin 2028.</p>
+        <p><strong>Neuf ou reconditionné ?</strong> Apple fournit un appareil « constitué de pièces d'origine Apple neuves et/ou précédemment utilisées, testées et répondant aux exigences fonctionnelles d'Apple ». En pratique, la majorité des remplacements sont des appareils reconditionnés équivalents au modèle du client.</p>
+        <p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000032225325/" target="_blank" rel="noopener">Art. L217-11 Code de la consommation</a> · <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions Apple</a></p>
+      </div>
+    `});
+  } else if (pr === "third-party" || pr === "self") {
+    const isSelf = pr === "self";
     cards.push({ title:`Réparation antérieure ${isSelf ? "(self-service)" : "(tiers)"}`, tag:"orange", tagLabel:"Attention", body:`
       <p><strong>Directive 2024/1799 :</strong> Apple ne peut pas refuser une réparation au seul motif qu'un tiers a déjà réparé. Informer Apple de toute modification.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
