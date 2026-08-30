@@ -377,8 +377,8 @@ function getResult(s) {
   }
 
   // 4. RÉPARATION PAR UN TIERS
-  if (s.prior-repair === "third-party" || s.prior-repair === "self") {
-    const isSelf = s.prior-repair === "self";
+  if (s["prior-repair"] === "third-party" || s["prior-repair"] === "self") {
+    const isSelf = s["prior-repair"] === "self";
     cards.push({ title:`Réparation antérieure ${isSelf ? "(self-service)" : "(tiers)"}`, tag:"orange", tagLabel:"Attention", body:`
       <p><strong>Directive 2024/1799 :</strong> Apple ne peut pas refuser une réparation au seul motif qu'un tiers a déjà réparé. Informer Apple de toute modification.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
