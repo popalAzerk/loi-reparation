@@ -318,24 +318,45 @@ function getResult(s) {
   let verdict, title, summary;
   if (canStore) {
     verdict = "eligible";
-    title = "✅ Réparation possible en Apple Store — Loi européenne";
-    summary = `${storeReason} Coût : <strong>${storeCost}</strong>.`;
+    if (isYear1 && isDefect && isAppleVendor) {
+      title = "✅ Éligible garantie constructeur + garantie légale";
+      summary = `<strong>Garantie constructeur Apple</strong> (1 an) + <strong>garantie légale de conformité</strong> (2 ans, vendeur). Apple Store est vendeur et fabricant — réparation gratuite. Coût : <strong>${storeCost}</strong>.`;
+    } else if (isYear1 && isDefect && !isAppleVendor) {
+      title = "✅ Éligible garantie constructeur Apple";
+      summary = `<strong>Garantie constructeur Apple</strong> (1 an) — Apple répare gratuitement quel que soit le lieu d'achat. La garantie légale reste à la charge du vendeur d'origine. Coût : <strong>${storeCost}</strong>.`;
+    } else if (isYear2 && isDefect && isAppleVendor) {
+      title = "✅ Éligible garantie légale de conformité";
+      summary = `<strong>Garantie légale de conformité</strong> (2 ans) — Apple Store est le vendeur. Garantie constructeur expirée (1 an). Le client doit prouver l'antériorité du défaut. Coût : <strong>${storeCost}</strong>.`;
+    } else if (isAnnexII && (s.age === "2-5" || s.age === "5-10") && isDefect) {
+      title = "✅ Éligible droit à la réparation — Loi européenne";
+      summary = `${storeReason} Coût : <strong>${storeCost}</strong>.`;
+    } else if (s["prior-repair"] === "apple-replace" && isDefect) {
+      title = "✅ Éligible garantie légale renouvelée";
+      summary = `${storeReason} Coût : <strong>${storeCost}</strong>.`;
+    } else if (s["prior-repair"] === "apple-repair" && isUnderWarranty && isDefect) {
+      title = "✅ Éligible garantie légale prolongée";
+      summary = `${storeReason} Coût : <strong>${storeCost}</strong>.`;
+    } else {
+      title = "✅ Réparation possible en Apple Store";
+      summary = `${storeReason} Coût : <strong>${storeCost}</strong>.`;
+    }
   } else {
     verdict = "not-eligible";
-    title = "❌ Réparation non possible en Apple Store — Loi européenne";
-    // Determine why
     if (isYear2 && !isAppleVendor && isDefect) {
-      summary = `Garantie constructeur Apple expirée (1 an). Le <strong>vendeur d'origine</strong> (${s.purchase === "other" ? "le magasin d'achat" : "le vendeur d'occasion"}) reste responsable de la garantie légale (2ème année). Le client doit prouver l'antériorité du défaut. Rediriger vers le vendeur.`;
+      title = "❌ Garantie constructeur expirée — rediriger vers le vendeur";
+      summary = `Garantie constructeur Apple expirée (1 an). Le <strong>vendeur d'origine</strong> reste responsable de la garantie légale (2ème année). Le client doit prouver l'antériorité du défaut.`;
     } else if (isAccidental) {
-      summary = "Dommage accidentel/liquide <strong>non couvert</strong> par la loi européenne de réparation. AppleCare+ avec franchise ou tarif hors garantie uniquement.";
+      title = "❌ Non couvert par la garantie (constructeur ou légale)";
+      summary = "Dommage accidentel/liquide non couvert. AppleCare+ avec franchise ou tarif hors garantie.";
     } else if (!isAnnexII && (s.age === "2-5" || s.age === "5-10") && isDefect) {
-      summary = `${p.name} <strong>hors Annexe II</strong> de la directive 2024/1799. Apple n'est pas tenue d'accepter la réparation hors garantie. Pas d'obligation légale.`;
+      title = "❌ Hors Annexe II — pas d'obligation légale";
+      summary = `${p.name} hors Annexe II de la directive 2024/1799. Apple n'est pas tenue d'accepter la réparation hors garantie.`;
     } else if (s.age === "over-10") {
-      summary = "Garantie légale et droit à la réparation <strong>expirés</strong> (> 10 ans). Aucune obligation légale pour Apple.";
-    } else if (s.purchase === "secondhand" && isDefect && !isUnderWarranty) {
-      summary = `Achat d'occasion ${isAnnexII ? `— droit à la réparation possible (Annexe II) mais Apple n'est pas le vendeur` : "— pas d'obligation légale"}.`;
+      title = "❌ Garanties expirées";
+      summary = "Garantie constructeur (1 an), garantie légale (2 ans) et droit à la réparation (5–10 ans) expirés. Aucune obligation légale.";
     } else {
-      summary = "Cette situation n'est pas couverte par la loi européenne de réparation en Apple Store.";
+      title = "❌ Non éligible en Apple Store";
+      summary = "Cette situation n'est pas couverte par la garantie constructeur, la garantie légale ou le droit à la réparation en Apple Store.";
     }
   }
 
