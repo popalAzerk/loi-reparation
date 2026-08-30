@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loi européenne de réparation — Guide Apple</title>
+<title>Genius Bar — Guide loi de réparation</title>
 <style>
   :root{
     --bg:#f5f5f7; --surface:#ffffff; --surface-2:#fbfbfd; --text:#1d1d1f;
@@ -36,9 +36,10 @@
   }
   .topbar-inner{ max-width:720px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:10px; }
   .apple-logo{ width:15px; height:18px; flex-shrink:0; opacity:.92; }
+  .topbar-label{ font-size:13px; font-weight:600; color:var(--text-secondary); letter-spacing:-0.01em; }
   .wrap{ max-width:720px; margin:0 auto; padding:52px 24px 64px; }
-  h1{ font-size:32px; line-height:1.1; letter-spacing:-0.015em; font-weight:600; margin:0 0 8px; text-align:center; }
-  .subtitle{ text-align:center; font-size:15px; color:var(--text-secondary); margin:0 0 36px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.45; }
+  h1{ font-size:30px; line-height:1.1; letter-spacing:-0.015em; font-weight:600; margin:0 0 8px; text-align:center; }
+  .subtitle{ text-align:center; font-size:14px; color:var(--text-secondary); margin:0 0 36px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.45; }
 
   /* Select boxes */
   .select-group{ display:flex; flex-direction:column; gap:14px; max-width:480px; margin:0 auto; }
@@ -59,64 +60,66 @@
   .select-box .value{ font-size:19px; font-weight:600; letter-spacing:-0.01em; color:var(--text); padding-top:2px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
   .select-box .chevron{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:13px; height:13px; color:var(--text-secondary); pointer-events:none; }
 
-  /* Result panel */
+  /* Result */
   .result-panel{ max-width:640px; margin:40px auto 0; }
   .result-placeholder{ text-align:center; color:var(--text-secondary); font-size:14px; padding:40px 0; }
-  .info-card{ background:var(--surface); border:1px solid var(--border-soft); border-radius:16px; padding:24px; margin-bottom:16px; box-shadow:var(--shadow); }
-  .info-card h2{ font-size:20px; font-weight:600; letter-spacing:-0.01em; margin:0 0 12px; }
-  .info-card h3{ font-size:15px; font-weight:600; margin:20px 0 8px; }
-  .info-card p{ font-size:14.5px; line-height:1.55; margin:0 0 12px; }
-  .info-card p:last-child{ margin-bottom:0; }
-  .info-card ul{ font-size:14.5px; line-height:1.6; margin:8px 0 12px; padding-left:20px; }
-  .info-card li{ margin-bottom:4px; }
-  .info-card a{ color:var(--accent); text-decoration:none; font-weight:500; }
-  .info-card a:hover{ color:var(--accent-hover); text-decoration:underline; }
+
+  .verdict-box{ border-radius:16px; padding:18px 22px; margin-bottom:14px; display:flex; align-items:flex-start; gap:14px; }
+  .verdict-box.eligible{ background:color-mix(in srgb, var(--ac-green) 10%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-green) 25%, transparent); }
+  .verdict-box.partial{ background:color-mix(in srgb, var(--ac-orange) 10%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-orange) 25%, transparent); }
+  .verdict-box.not-eligible{ background:color-mix(in srgb, var(--ac-red) 8%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-red) 20%, transparent); }
+  .verdict-icon{ font-size:28px; line-height:1; flex-shrink:0; }
+  .verdict-box h2{ margin:0 0 4px; font-size:17px; }
+  .verdict-box p{ margin:0; font-size:13px; color:var(--text-secondary); line-height:1.4; }
+
+  .quick-card{ background:var(--surface); border:1px solid var(--border-soft); border-radius:14px; padding:16px 20px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .quick-card h3{ font-size:15px; font-weight:600; margin:0 0 8px; }
+  .quick-card p{ font-size:13.5px; line-height:1.5; margin:0 0 8px; color:var(--text); }
+  .quick-card p:last-child{ margin-bottom:0; }
+  .quick-card ul{ font-size:13.5px; line-height:1.55; margin:6px 0 8px; padding-left:18px; }
+  .quick-card li{ margin-bottom:3px; }
+  .quick-card a{ color:var(--accent); text-decoration:none; font-weight:500; }
+  .quick-card a:hover{ text-decoration:underline; }
+
+  .tag{ display:inline-block; font-size:10.5px; font-weight:600; padding:2px 9px; border-radius:980px; margin-right:5px; background:color-mix(in srgb, var(--accent) 10%, transparent); color:var(--accent); }
+  .tag.red{ background:color-mix(in srgb, var(--ac-red) 10%, transparent); color:var(--ac-red); }
+  .tag.green{ background:color-mix(in srgb, var(--ac-green) 12%, transparent); color:var(--ac-green); }
+  .tag.orange{ background:color-mix(in srgb, var(--ac-orange) 12%, transparent); color:var(--ac-orange); }
+
+  /* Expandable "En savoir plus" */
+  .expand-link{
+    display:inline-block; font-size:13px; font-weight:500; color:var(--accent);
+    cursor:pointer; margin-top:6px; user-select:none;
+  }
+  .expand-link:hover{ color:var(--accent-hover); text-decoration:underline; }
+  .expand-link::after{ content:" ›"; font-size:14px; transition:transform .2s ease; display:inline-block; }
+  .expand-link.open::after{ transform:rotate(90deg); }
+  .expand-content{ display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border-soft); }
+  .expand-content.open{ display:block; }
+  .expand-content p{ font-size:13px; line-height:1.5; margin:0 0 8px; color:var(--text-secondary); }
+  .expand-content p:last-child{ margin-bottom:0; }
+  .expand-content ul{ font-size:13px; line-height:1.55; margin:6px 0; padding-left:18px; color:var(--text-secondary); }
+  .expand-content li{ margin-bottom:3px; }
+  .expand-content a{ color:var(--accent); text-decoration:none; font-weight:500; }
+  .expand-content a:hover{ text-decoration:underline; }
 
   .callout{
     background:color-mix(in srgb, var(--accent) 6%, var(--surface-2));
-    border-left:3px solid var(--accent); border-radius:0 12px 12px 0;
-    padding:14px 18px; margin:16px 0; font-size:13.5px; line-height:1.5;
+    border-left:3px solid var(--accent); border-radius:0 10px 10px 0;
+    padding:12px 16px; margin:10px 0; font-size:13px; line-height:1.5;
   }
   .callout.warn{ background:color-mix(in srgb, var(--ac-red) 6%, var(--surface-2)); border-left-color:var(--ac-red); }
   .callout.warn strong{ color:var(--ac-red); }
   .callout.success{ background:color-mix(in srgb, var(--ac-green) 8%, var(--surface-2)); border-left-color:var(--ac-green); }
   .callout.success strong{ color:var(--ac-green); }
 
-  .tag{ display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:980px; margin-right:6px; background:color-mix(in srgb, var(--accent) 10%, transparent); color:var(--accent); }
-  .tag.red{ background:color-mix(in srgb, var(--ac-red) 10%, transparent); color:var(--ac-red); }
-  .tag.green{ background:color-mix(in srgb, var(--ac-green) 12%, transparent); color:var(--ac-green); }
-  .tag.orange{ background:color-mix(in srgb, var(--ac-orange) 12%, transparent); color:var(--ac-orange); }
-
-  .verdict-box{
-    border-radius:16px; padding:20px 24px; margin-bottom:16px;
-    display:flex; align-items:flex-start; gap:16px;
-  }
-  .verdict-box.eligible{ background:color-mix(in srgb, var(--ac-green) 10%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-green) 25%, transparent); }
-  .verdict-box.partial{ background:color-mix(in srgb, var(--ac-orange) 10%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-orange) 25%, transparent); }
-  .verdict-box.not-eligible{ background:color-mix(in srgb, var(--ac-red) 8%, var(--surface)); border:1px solid color-mix(in srgb, var(--ac-red) 20%, transparent); }
-  .verdict-icon{ font-size:32px; line-height:1; flex-shrink:0; }
-  .verdict-box h2{ margin:0 0 4px; font-size:18px; }
-  .verdict-box p{ margin:0; font-size:13.5px; color:var(--text-secondary); line-height:1.45; }
-
-  .price-table{ width:100%; border-collapse:collapse; margin:12px 0; font-size:13.5px; }
-  .price-table th{ text-align:left; font-size:12px; color:var(--text-secondary); font-weight:500; padding:8px 12px; border-bottom:1px solid var(--border-soft); }
-  .price-table td{ padding:10px 12px; border-bottom:1px solid var(--border-soft); }
+  .price-table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:13px; }
+  .price-table th{ text-align:left; font-size:11.5px; color:var(--text-secondary); font-weight:500; padding:6px 10px; border-bottom:1px solid var(--border-soft); }
+  .price-table td{ padding:8px 10px; border-bottom:1px solid var(--border-soft); }
   .price-table tr:last-child td{ border-bottom:none; }
 
-  .def-card{
-    background:var(--surface-2); border:1px solid var(--border-soft);
-    border-radius:14px; padding:18px 22px; margin-bottom:14px;
-  }
-  .def-card h3{ font-size:14px; font-weight:600; margin:0 0 8px; color:var(--text); }
-  .def-card p{ font-size:13.5px; line-height:1.5; margin:0; color:var(--text-secondary); }
-  .def-card .compare{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
-  .def-card .compare > div{ padding:12px; border-radius:10px; background:var(--surface); border:1px solid var(--border-soft); }
-  .def-card .compare h4{ font-size:12.5px; font-weight:600; margin:0 0 6px; }
-  .def-card .compare p{ font-size:12.5px; margin:0; }
-  @media(max-width:480px){ .def-card .compare{ grid-template-columns:1fr; } }
-
-  .disclaimer{ max-width:640px; margin:28px auto 0; padding:14px 4px 0; font-size:12px; line-height:1.5; color:var(--text-secondary); text-align:center; }
-  .footer{ text-align:center; padding:32px 24px 56px; font-size:12px; color:var(--text-secondary); border-top:1px solid var(--border-soft); }
+  .disclaimer{ max-width:640px; margin:28px auto 0; padding:14px 4px 0; font-size:11.5px; line-height:1.5; color:var(--text-secondary); text-align:center; }
+  .footer{ text-align:center; padding:32px 24px 56px; font-size:11.5px; color:var(--text-secondary); border-top:1px solid var(--border-soft); }
   .footer a{ color:var(--text-secondary); text-decoration:none; }
   .footer a:hover{ color:var(--accent); text-decoration:underline; }
   ::selection{ background:color-mix(in srgb, var(--accent) 30%, transparent); }
@@ -124,17 +127,16 @@
   @media(max-width:480px){
     .topbar-inner{ padding:12px 16px; }
     .wrap{ padding:32px 16px 40px; }
-    h1{ font-size:25px; }
-    .subtitle{ font-size:13px; margin-bottom:24px; }
+    h1{ font-size:24px; }
+    .subtitle{ font-size:12.5px; margin-bottom:24px; }
     .select-group{ gap:10px; }
     .select-box{ padding:8px 38px 8px 14px; }
     .select-box label{ font-size:12px; }
     .select-box .value{ font-size:17px; }
     .select-box .chevron{ right:14px; }
-    .info-card{ padding:18px; border-radius:14px; }
-    .info-card h2{ font-size:17px; }
-    .verdict-box{ padding:16px; }
-    .verdict-icon{ font-size:26px; }
+    .quick-card{ padding:14px 16px; }
+    .verdict-box{ padding:14px 16px; }
+    .verdict-icon{ font-size:24px; }
   }
 </style>
 </head>
@@ -142,30 +144,30 @@
 
 <div class="topbar"><div class="topbar-inner">
   <svg class="apple-logo" viewBox="0 0 170 170" fill="currentColor"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.96-3.17-14.32-3.17-4.57 0-9.47 1.05-14.71 3.17-5.25 2.13-9.48 3.24-12.71 3.34-4.93.21-9.84-1.96-14.74-6.51-3.13-2.73-7.05-7.41-11.76-14.04-5.06-7.08-9.22-15.29-12.47-24.65-3.48-10.09-5.22-19.86-5.22-29.32 0-10.83 2.34-20.17 7.03-28 3.68-6.28 8.58-11.24 14.71-14.88 6.13-3.64 12.76-5.5 19.9-5.62 3.92 0 9.06 1.21 15.44 3.6 6.36 2.4 10.44 3.61 12.22 3.61 1.33 0 5.85-1.42 13.53-4.25 7.26-2.63 13.39-3.72 18.4-3.27 13.6 1.1 23.83 6.46 30.65 16.09-12.16 7.37-18.18 17.69-18.06 30.93.11 10.32 3.86 18.9 11.24 25.71 3.35 3.18 7.09 5.64 11.24 7.39-.9 2.61-1.85 5.11-2.86 7.51zM119.11 5.36c0 8.09-2.96 15.64-8.86 22.64-7.12 8.32-15.72 13.13-25.05 12.37-.12-.95-.19-1.95-.19-3 0-7.77 3.39-16.09 9.4-22.89 3-3.44 6.82-6.3 11.45-8.56C110.47.98 114.84-.24 118.94.01c.14.01.14.44.17 5.35z"/></svg>
+  <span class="topbar-label">Genius Bar — Guide réparation</span>
 </div></div>
 
 <div class="wrap">
-  <h1>Loi européenne de réparation</h1>
-  <p class="subtitle">Répondez aux questions pour connaître vos droits. Le guide s'adapte à votre situation — centré sur les produits Apple et la directive européenne 2024/1799.</p>
+  <h1>Guide loi de réparation</h1>
+  <p class="subtitle">Outil d'aide à la décision pour les conseillers Genius Bar. Sélectionnez le produit et la situation du client pour connaître les droits applicables.</p>
 
   <div class="select-group" id="questionnaire"></div>
-
   <div class="result-panel" id="result-panel">
-    <div class="result-placeholder">Sélectionnez vos réponses ci-dessus pour découvrir vos droits.</div>
+    <div class="result-placeholder">Sélectionnez le produit et la situation du client.</div>
   </div>
 
   <div class="disclaimer">
-    Ce site est un guide informatif non affilié à Apple Inc. Il ne constitue pas un conseil juridique. Les informations sont basées sur la directive (UE) 2024/1799, les articles de Service Public, les conditions générales publiées par Apple et la loi française (AGEC). Consultez un professionnel du droit pour votre situation spécifique.
+    Outil informatif non affilié à Apple Inc. Ne constitue pas un conseil juridique. Basé sur la directive (UE) 2024/1799, Service Public, les conditions générales Apple et la loi française (AGEC).
   </div>
 </div>
 
 <div class="footer">
   Sources : <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> ·
   <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive (UE) 2024/1799</a> ·
-  <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales de réparation Apple</a> ·
-  <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits des consommateurs — Apple</a> ·
+  <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions Apple</a> ·
+  <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits consommateurs</a> ·
   <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">Self Service Repair</a> ·
-  <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">Tarifs de réparation Apple</a> ·
+  <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">Tarifs</a> ·
   <a href="https://www.europe-consommateurs.eu/thematiques/garanties/apres-achat/reparation/" target="_blank" rel="noopener">Europe Consommateurs</a>
 </div>
 
@@ -173,13 +175,26 @@
 // ========== QUESTIONS ==========
 const QUESTIONS = [
   {
+    id: "product",
+    label: "Produit",
+    options: [
+      { value: "iphone", label: "iPhone" },
+      { value: "ipad", label: "iPad" },
+      { value: "mac", label: "Mac" },
+      { value: "watch", label: "Apple Watch" },
+      { value: "airpods", label: "AirPods" },
+      { value: "vision", label: "Vision Pro" },
+      { value: "accessory", label: "Accessoires" }
+    ]
+  },
+  {
     id: "purchase",
     label: "Lieu d'achat",
     options: [
       { value: "apple-store", label: "Apple Store" },
-      { value: "authorized", label: "Revendeur agréé Apple" },
-      { value: "other-new", label: "Autre magasin (achat neuf)" },
-      { value: "secondhand", label: "Achat d'occasion / reconditionné" }
+      { value: "authorized", label: "Revendeur agréé" },
+      { value: "other-new", label: "Autre magasin (neuf)" },
+      { value: "secondhand", label: "Occasion / reconditionné" }
     ]
   },
   {
@@ -194,12 +209,12 @@ const QUESTIONS = [
   },
   {
     id: "condition",
-    label: "État de l'appareil",
+    label: "Motif de la visite",
     options: [
-      { value: "defect", label: "Panne interne / défaut de fabrication" },
-      { value: "accidental", label: "Dommage accidentel (chute, chocs)" },
+      { value: "defect", label: "Panne / défaut de fabrication" },
+      { value: "accidental", label: "Dommage accidentel" },
       { value: "liquid", label: "Dommage liquide" },
-      { value: "wear", label: "Usure normale (batterie, etc.)" }
+      { value: "battery", label: "Batterie (< 80%)" }
     ]
   },
   {
@@ -207,331 +222,239 @@ const QUESTIONS = [
     label: "Réparation antérieure",
     options: [
       { value: "none", label: "Jamais réparé" },
-      { value: "apple", label: "Réparé par Apple ou CSAA" },
-      { value: "third-party", label: "Réparé par un tiers" },
-      { value: "self", label: "Self Service Repair (soi-même)" }
+      { value: "apple", label: "Par Apple / CSAA" },
+      { value: "third-party", label: "Par un tiers" },
+      { value: "self", label: "Self Service Repair" }
     ]
   }
 ];
 
-// ========== DEFINITIONS (always shown) ==========
-const DEFINITIONS_HTML = `
-  <div class="info-card">
-    <h2><span class="tag">Définitions</span> Garanties et remplacements</h2>
-
-    <div class="def-card">
-      <h3>Garantie légale de conformité vs garantie constructeur</h3>
-      <p>Ce sont deux choses différentes qui sont souvent confondues :</p>
-      <div class="compare">
-        <div>
-          <h4>Garantie légale de conformité</h4>
-          <p><strong>Obligation légale</strong> imposée par l'UE et le droit français. Durée : <strong>2 ans</strong> à compter de la remise du bien. Couvre les <strong>défauts de conformité</strong> existant au moment de la livraison (vice de matériel, défaut de fabrication). <strong>Gratuite</strong> pour le consommateur. S'applique à <strong>tout achat auprès d'un professionnel</strong>, quel que soit le produit. Le vendeur (Apple Store, revendeur) est responsable.</p>
-        </div>
-        <div>
-          <h4>Garantie constructeur (AppleCare+)</h4>
-          <p><strong>Contrat commercial optionnel</strong> proposé par Apple. <strong>Payant</strong> (abonnement mensuel ou achat unique). Couvre les <strong>dommages accidentels</strong> en plus des défauts de fabrication. AppleCare+ = un seul produit ; AppleCare One = jusqu'à 3 produits avec garantie perte/vol. La garantie constructeur <strong>s'ajoute</strong> à la garantie légale, ne la remplace pas.</p>
-        </div>
-      </div>
-      <div class="callout">
-        <p><strong>Important :</strong> La garantie limitée d'Apple d'1 an (incluse avec tout produit neuf) est <strong>distincte</strong> de la garantie légale de 2 ans. En France, c'est la garantie légale de 2 ans qui prévaut. Voir <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits des consommateurs — Apple</a>.</p>
-      </div>
-    </div>
-
-    <div class="def-card">
-      <h3>Remplacement d'appareil : neuf ou reconditionné ?</h3>
-      <p>Lorsqu'Apple remplace votre appareil (sous garantie ou via AppleCare+), elle peut fournir :</p>
-      <ul>
-        <li><strong>Un appareil neuf</strong> — dans certains cas, notamment pour les produits récents</li>
-        <li><strong>Un appareil reconditionné (« refurbished »)</strong> — constitué de pièces d'origine Apple neuves et/ou précédemment utilisées, testées et répondant aux exigences fonctionnelles d'Apple</li>
-      </ul>
-      <div class="callout warn">
-        <p><strong>Ce que dit Apple :</strong> « Pour la réparation de votre produit, Apple peut utiliser des pièces ou des produits qui sont constitués de pièces d'origine Apple neuves et/ou précédemment utilisées, qui ont été testées et répondent aux exigences fonctionnelles d'Apple. » — <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales de réparation Apple</a></p>
-      </div>
-      <p>En pratique, la majorité des remplacements hors Apple Store sont des appareils reconditionnés équivalents à votre modèle. Apple conserve la pièce remplacée. Si la loi applicable exige qu'Apple vous retourne la pièce remplacée, vous devrez payer le prix de vente au détail de l'article de remplacement.</p>
-      <div class="callout">
-        <p><strong>Cas particulier — remplacement imposé par le vendeur :</strong> Si le vendeur vous impose un remplacement plutôt qu'une réparation pendant la garantie légale, la garantie est <strong>renouvelée pour 2 ans</strong> à compter du remplacement. L'appareil de remplacement peut être reconditionné, mais il doit être conforme.</p>
-      </div>
-      <p><strong>Et la directive européenne ?</strong> La directive 2024/1799 précise qu'en cas de réparation « impossible », le fabricant peut proposer un <strong>produit reconditionné</strong>. Le consommateur garde le choix d'accepter ou refuser.</p>
-    </div>
-
-    <div class="def-card">
-      <h3>Garantie légale vs garantie commerciale : tableau comparatif</h3>
-      <table class="price-table">
-        <tr><th></th><th>Garantie légale</th><th>AppleCare+ / AppleCare One</th></tr>
-        <tr><td><strong>Obligation</strong></td><td>Légale (UE + France)</td><td>Contractuelle (optionnelle)</td></tr>
-        <tr><td><strong>Durée</strong></td><td>2 ans (+1 an si réparation)</td><td>Tant que l'abonnement est actif</td></tr>
-        <tr><td><strong>Prix</strong></td><td>Gratuit</td><td>1,49 € à 20,99 €/mois</td></tr>
-        <tr><td><strong>Couverture</strong></td><td>Défauts de conformité uniquement</td><td>Défauts + dommages accidentels + (perte/vol avec One)</td></tr>
-        <tr><td><strong>Responsable</strong></td><td>Le vendeur</td><td>Apple</td></tr>
-        <tr><td><strong>Batterie &lt;80%</strong></td><td>Remplacement gratuit</td><td>Remplacement gratuit</td></tr>
-        <tr><td><strong>Franchise</strong></td><td>Aucune</td><td>29 € à 299 € selon produit</td></tr>
-      </table>
-    </div>
-  </div>
-`;
+// ========== PRODUCT DATA ==========
+const PRODUCTS = {
+  iphone:   { name:"iPhone",      annexII:true,  reg:"2023/1670",  acScreen:"29€", acOther:"99€",  batteryFree:true },
+  ipad:     { name:"iPad",        annexII:true,  reg:"2023/1670",  acScreen:"29€", acOther:"49–99€", batteryFree:true },
+  mac:      { name:"Mac",         annexII:false, reg:null,         acScreen:"99€", acOther:"259€", batteryFree:true },
+  watch:    { name:"Apple Watch", annexII:false, reg:null,         acScreen:"65–75€", acOther:"65–75€", batteryFree:true },
+  airpods:  { name:"AirPods",     annexII:false, reg:null,         acScreen:"—",   acOther:"29€",  batteryFree:false },
+  vision:   { name:"Vision Pro",  annexII:false, reg:null,         acScreen:"—",   acOther:"299€", batteryFree:false },
+  accessory:{ name:"Accessoires", annexII:false, reg:null,         acScreen:"—",   acOther:"—",    batteryFree:false }
+};
 
 // ========== RESULT ENGINE ==========
-function getVerdict(state) {
-  const { purchase, age, condition, priorRepair } = state;
+function getResult(s) {
+  const p = PRODUCTS[s.product];
+  let verdict = "eligible", title = "", summary = "", cards = [];
 
-  // Build eligibility and explanation
-  let verdict = "eligible";
-  let title = "";
-  let summary = "";
-  let cards = [];
-
-  // === DETERMINE ELIGIBILITY ===
-
-  // Secondhand purchase: no legal guarantee from seller
-  if (purchase === "secondhand") {
-    // Check if post-warranty repair right still applies (if bought from a manufacturer)
-    if (age === "under-2" || age === "2-5" || age === "5-10") {
-      verdict = "partial";
-      title = "Pas de garantie légale, mais droit à la réparation possible";
-      summary = "L'achat d'occasion n'est pas couvert par la garantie légale de conformité (sauf si acheté à un professionnel avec garantie). Cependant, le fabricant (Apple) peut encore être tenu au droit à la réparation hors garantie si l'appareil figure dans l'Annexe II.";
-    } else {
+  // --- OCCASION ---
+  if (s.purchase === "secondhand") {
+    if (s.age === "over-10") {
       verdict = "not-eligible";
-      title = "Aucune couverture garantie ni droit à la réparation";
-      summary = "L'appareil a plus de 10 ans et a été acheté d'occasion. La garantie légale ne s'applique pas et l'obligation de réparation du fabricant (5–10 ans) est probablement expirée. Une réparation payante chez un réparateur indépendant reste possible.";
-    }
-  }
-  // Under 2 years warranty
-  else if (age === "under-2") {
-    if (condition === "defect" || condition === "wear") {
-      verdict = "eligible";
-      title = "Garantie légale de conformité applicable";
-      summary = "Votre appareil est couvert par la garantie légale de conformité (2 ans). Apple ou le vendeur doit réparer ou remplacer gratuitement. En choisissant la réparation, votre garantie est prolongée d'un an.";
-    } else if (condition === "accidental" || condition === "liquid") {
+      title = "Aucune couverture";
+      summary = "Achat d'occasion + plus de 10 ans : ni garantie légale, ni obligation de réparation. Réparation indépendante uniquement.";
+    } else if (p.annexII) {
       verdict = "partial";
-      title = "Garantie légale non applicable, AppleCare+ si souscrit";
-      summary = "Les dommages accidentels et dommages liquides ne sont pas couverts par la garantie légale de conformité. Si vous avez souscrit AppleCare+ ou AppleCare One, ces dommages sont couverts moyennant une franchise. Sans AppleCare, la réparation est payante au tarif hors garantie.";
-    }
-  }
-  // 2-5 years: post-warranty repair right
-  else if (age === "2-5") {
-    if (condition === "defect" || condition === "wear") {
-      verdict = "eligible";
-      title = "Droit à la réparation hors garantie (directive 2024/1799)";
-      summary = "La garantie légale est expirée, mais la directive européenne 2024/1799 vous donne le droit d'exiger une réparation d'Apple à un prix raisonnable. Cette obligation s'applique pour les smartphones (iPhone) et tablettes (iPad) pendant 5 à 10 ans après l'achat.";
+      title = "Pas de garantie légale, droit à la réparation possible";
+      summary = `L'achat d'occasion n'est pas couvert par la garantie légale. Mais le ${p.name} figure dans l'Annexe II : Apple doit accepter une réparation à prix raisonnable pendant 5–10 ans.`;
     } else {
       verdict = "partial";
-      title = "Réparation payante, droit à la réparation limité";
-      summary = "Les dommages accidentels et liquides ne sont pas couverts par le droit à la réparation (qui concerne les pannes, pas les dommages accidentels). Une réparation payante chez Apple ou un tiers est possible. Si vous avez AppleCare+, la franchise s'applique.";
+      title = "Pas de garantie légale, pas d'obligation de réparation";
+      summary = `L'achat d'occasion n'est pas couvert par la garantie légale. Le ${p.name} n'est pas dans l'Annexe II : Apple n'est pas tenue d'accepter la réparation. Réparation payante possible.`;
     }
   }
-  // 5-10 years: repair right may still apply depending on product
-  else if (age === "5-10") {
-    verdict = "partial";
-    if (condition === "defect" || condition === "wear") {
-      title = "Droit à la réparation en fin de période";
-      summary = "L'obligation de réparation d'Apple s'applique pendant 5 à 10 ans selon le produit et la pièce. Pour les iPhone et iPad (règlement 2023/1670), cette période peut encore être active. Vérifiez auprès d'Apple si la pièce concernée est encore couverte. La réparation sera à un prix raisonnable mais payante.";
+  // --- SOUS GARANTIE (< 2 ans) ---
+  else if (s.age === "under-2") {
+    if (s.condition === "defect" || s.condition === "battery") {
+      verdict = "eligible";
+      title = "Garantie légale de conformité";
+      summary = "Défaut couvert par la garantie légale (2 ans). Réparation ou remplacement gratuit. Prolongation d'un an si réparation choisie.";
     } else {
+      verdict = "partial";
+      title = "Hors garantie légale, AppleCare si souscrit";
+      summary = "Dommage accidentel/liquide non couvert par la garantie légale. AppleCare+ couvre avec franchise. Sinon tarif hors garantie.";
+    }
+  }
+  // --- 2–5 ans ---
+  else if (s.age === "2-5") {
+    if (p.annexII && (s.condition === "defect" || s.condition === "battery")) {
+      verdict = "eligible";
+      title = "Droit à la réparation hors garantie";
+      summary = `${p.name} dans l'Annexe II (règlement ${p.reg}). Apple doit réparer à prix raisonnable. Payant mais obligatoire pour Apple.`;
+    } else if (s.condition === "defect" || s.condition === "battery") {
+      verdict = "partial";
+      title = "Réparation payante, pas d'obligation légale";
+      summary = `${p.name} hors Annexe II : Apple n'est pas tenue d'accepter. Réparation payante en boutique ou chez un tiers. Bonus réparation français possible.`;
+    } else {
+      verdict = "partial";
       title = "Réparation payante uniquement";
-      summary = "Les dommages accidentels et liquides ne sont jamais couverts par le droit à la réparation. Une réparation payante reste possible chez Apple ou un réparateur indépendant. Le bonus réparation français (15–60€) peut réduire le coût chez un réparateur labellisé QualiRépar.";
+      summary = "Dommage accidentel/liquide jamais couvert par le droit à la réparation. AppleCare+ avec franchise si souscrit, sinon tarif hors garantie.";
     }
   }
-  // Over 10 years: no obligations
+  // --- 5–10 ans ---
+  else if (s.age === "5-10") {
+    if (p.annexII && (s.condition === "defect" || s.condition === "battery")) {
+      verdict = "partial";
+      title = "Droit à la réparation en fin de période";
+      summary = `${p.name} dans l'Annexe II : l'obligation (5–10 ans) peut encore s'appliquer selon la pièce. Vérifier auprès d'Apple. Prix raisonnable, payant.`;
+    } else {
+      verdict = "partial";
+      title = "Réparation payante, pas d'obligation";
+      summary = "Au-delà de 5 ans, l'obligation de réparation peut être expirée. Réparation payante chez Apple ou un tiers. Bonus réparation français possible.";
+    }
+  }
+  // --- > 10 ans ---
   else {
     verdict = "not-eligible";
-    title = "Aucune obligation de réparation du fabricant";
-    summary = "L'appareil a plus de 10 ans. La garantie légale (2 ans) et l'obligation de réparation hors garantie (5–10 ans) sont expirées. Une réparation payante chez un réparateur indépendant reste possible, mais Apple n'est plus tenue d'accepter.";
+    title = "Aucune obligation de réparation";
+    summary = "Garantie légale et droit à la réparation expirés. Réparation indépendante uniquement. Bonus réparation français (15–60€) chez QualiRépar.";
   }
 
-  // Adjust for prior repair by third party
-  if (priorRepair === "third-party" || priorRepair === "self") {
-    if (verdict === "eligible" && age === "under-2") {
-      cards.push(`
-        <div class="callout warn">
-          <p><strong>Attention — réparation par un tiers :</strong> Apple précise que vous devez l'informer de toute réparation effectuée par un tiers. Bien que la directive interdise de refuser une réparation au seul motif qu'un tiers a déjà réparé le produit, Apple peut facturer un diagnostic (jusqu'à 100€ dans l'UE) si la panne est due à la réparation antérieure. La garantie n'est pas affectée par une réparation en self-service, mais tout dommage causé pendant l'opération ne sera pas couvert.</p>
-        </div>
-      `);
-    }
-    if (verdict === "eligible" && (age === "2-5" || age === "5-10")) {
-      cards.push(`
-        <div class="callout success">
-          <p><strong>Bonne nouvelle :</strong> La directive 2024/1799 interdit à Apple de refuser une réparation au seul motif qu'une réparation antérieure a été effectuée par un tiers ou par vous-même. Apple ne peut pas invoquer ce motif pour refuser. Voir <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">directive, considérant 24</a>.</p>
-        </div>
-      `);
-    }
-  }
+  // --- CARDS ---
 
-  // === BUILD DETAILED CARDS ===
-
-  if (verdict === "eligible" && age === "under-2" && (condition === "defect" || condition === "wear")) {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag green">Vos droits</span> Garantie légale de conformité</h2>
-        <p>Votre appareil est <strong>couvert par la garantie légale de conformité</strong> de 2 ans. Voici ce que vous pouvez exiger :</p>
-        <h3>Ce que le vendeur doit faire</h3>
-        <ul>
-          <li><strong>Réparation gratuite</strong> du défaut de conformité (vice de matériel ou de fabrication)</li>
-          <li>Si la réparation est impossible, <strong>remplacement</strong> de l'appareil (neuf ou reconditionné conforme)</li>
-          <li>Le remboursement si ni réparation ni remplacement ne sont possibles</li>
-        </ul>
-        <h3>Prolongation de garantie (nouveau depuis le 31 juillet 2026)</h3>
-        <div class="callout success">
-          <p><strong>Si vous choisissez la réparation plutôt que le remplacement :</strong> votre garantie légale est <strong>prolongée d'un an</strong> (contre 6 mois précédemment). C'est un droit prévu par la <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">directive (UE) 2024/1799</a>.</p>
-        </div>
-        <div class="callout">
-          <p><strong>Si le vendeur impose le remplacement :</strong> la garantie légale est <strong>renouvelée pour 2 ans</strong> à compter du remplacement.</p>
-        </div>
-        <h3>Comment procéder chez Apple</h3>
-        <ul>
-          <li>Prenez rendez-vous dans un <a href="https://www.apple.com/fr/retail/" target="_blank" rel="noopener">Apple Store</a> ou un Centre de Services Agréé</li>
-          <li>Sauvegardez vos données avant toute intervention</li>
-          <li>Informez Apple de toute modification ou réparation antérieure par un tiers</li>
-          <li>Suivez l'état sur <a href="https://www.apple.com/support/repairstatus/" target="_blank" rel="noopener">apple.com/support/repairstatus</a></li>
-        </ul>
-        <p>Source : <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> · <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale de conformité</a></p>
+  // 1. VERDICT DETAIL
+  if (verdict === "eligible" && s.age === "under-2" && (s.condition === "defect" || s.condition === "battery")) {
+    cards.push({ title:"Garantie légale — Procédure", tag:"green", tagLabel:"Procédure", body:`
+      <p><strong>Action :</strong> Réparation ou remplacement gratuit. Le client choisit réparation → garantie prolongée d'un an.</p>
+      <p><strong>Si remplacement imposé :</strong> garantie renouvelée 2 ans.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>La garantie légale de conformité (2 ans) couvre les défauts existant au moment de la livraison. Elle s'ajoute à la garantie limitée d'Apple d'1 an — c'est la garantie légale qui prévaut en France.</p>
+        <p>Depuis le 31 juillet 2026, la directive (UE) 2024/1799 prolonge la garantie d'<strong>un an</strong> (contre 6 mois avant) si le client choisit la réparation plutôt que le remplacement.</p>
+        <p>Apple peut utiliser des pièces « d'origine Apple neuves et/ou précédemment utilisées, testées et répondant aux exigences fonctionnelles d'Apple ».</p>
+        <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Garantie légale — Service Public</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits consommateurs — Apple</a></p>
       </div>
-    `);
+    `});
   }
 
-  if (verdict === "eligible" && (age === "2-5" || age === "5-10") && (condition === "defect" || condition === "wear")) {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag green">Vos droits</span> Droit à la réparation hors garantie</h2>
-        <p>Bien que la garantie légale soit expirée, la <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">directive (UE) 2024/1799</a> vous donne des droits :</p>
-        <h3>Ce qu'Apple doit faire</h3>
-        <ul>
-          <li><strong>Accepter de réparer</strong> votre iPhone ou iPad — vous pouvez l'exiger</li>
-          <li>La réparation doit être à un <strong>« prix raisonnable »</strong> — pas gratuit, mais pas excessif</li>
-          <li>La réparation doit être effectuée dans un <strong>délai convenable</strong></li>
-          <li>Apple doit publier les <strong>tarifs indicatifs</strong> des réparations les plus courantes</li>
-          <li>Apple doit fournir les <strong>coordonnées de ses services de réparation</strong></li>
-        </ul>
-        <h3>Durée de l'obligation</h3>
-        <p>L'obligation s'applique pendant <strong>5 à 10 ans</strong> après l'achat, selon le produit et la pièce. Pour les iPhone et iPad, le <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1670" target="_blank" rel="noopener">règlement (UE) 2023/1670</a> définit les exigences de réparabilité et la disponibilité des pièces de rechange.</p>
-        <div class="callout">
-          <p><strong>Apple ne peut pas refuser pour ces raisons :</strong></p>
-          <ul>
-            <li>Le coût des pièces de rechange (raison purement économique)</li>
-            <li>Le fait qu'un tiers a déjà réparé l'appareil</li>
-            <li>Le fait que vous avez réparé vous-même (Self Service Repair)</li>
-          </ul>
-        </div>
-        <h3>Options de réparation Apple</h3>
-        <ul>
-          <li><strong>Apple Store / CSAA</strong> — réparation en boutique par des techniciens certifiés</li>
-          <li><strong>Envoi postal</strong> — bordereau prépayé possible</li>
-          <li><strong>Self Service Repair</strong> — <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">achat de pièces d'origine</a> et location d'outils (59,95 €/semaine)</li>
-          <li><strong>Genuine Parts Distributor</strong> — réparateurs indépendants avec pièces Apple</li>
-        </ul>
-        <p>Pour estimer le coût, consultez <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">l'outil de tarifs de réparation Apple</a>.</p>
-        <p>Source : <a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> · <a href="https://commission.europa.eu/law/law-topic/consumer-protection-law/directive-repair-goods_en" target="_blank" rel="noopener">Commission européenne</a></p>
+  if (verdict === "eligible" && (s.age === "2-5" || s.age === "5-10") && p.annexII && (s.condition === "defect" || s.condition === "battery")) {
+    cards.push({ title:"Droit à la réparation — Procédure", tag:"green", tagLabel:"Procédure", body:`
+      <p><strong>Action :</strong> Accepter la réparation. Prix raisonnable, délai convenable. Le client peut l'exiger.</p>
+      <p><strong>Apple ne peut pas refuser pour :</strong> coût des pièces, réparation antérieure par un tiers.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>La directive (UE) 2024/1799 impose aux fabricants de réparer les produits de l'Annexe II à un prix raisonnable, pendant 5 à 10 ans après l'achat.</p>
+        <p>Le ${p.name} figure dans l'Annexe II via le <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1670" target="_blank" rel="noopener">règlement (UE) ${p.reg}</a> sur l'écoconception.</p>
+        <p>Le prix « raisonnable » n'est pas défini précisément, mais Apple doit publier les tarifs indicatifs des réparations courantes. Le coût ne doit pas dissuader intentionnellement la réparation.</p>
+        <p>Options : Apple Store, envoi postal, Self Service Repair, réparateur indépendant (Genuine Parts Distributor).</p>
+        <p><a href="https://www.service-public.gouv.fr/particuliers/actualites/A19033" target="_blank" rel="noopener">Service Public</a> · <a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive 2024/1799</a></p>
       </div>
-    `);
+    `});
   }
 
-  if (verdict === "partial" && (condition === "accidental" || condition === "liquid")) {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag orange">Dommages non couverts</span> Dommages accidentels et liquides</h2>
-        <p>La garantie légale de conformité et le droit à la réparation couvrent les <strong>défauts de fabrication et pannes internes</strong>, <strong>pas les dommages accidentels</strong>.</p>
-        <h3>Vos options</h3>
-        <ul>
-          <li><strong>Avec AppleCare+ / AppleCare One :</strong> les dommages accidentels et liquides sont couverts moyennant une franchise (29€ à 299€ selon le produit et le type de dommage)</li>
-          <li><strong>Sans AppleCare :</strong> réparation au <strong>tarif hors garantie</strong> — consultez <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">l'outil de tarifs</a></li>
-          <li><strong>Réparateur indépendant :</strong> souvent moins cher qu'Apple, pièces d'origine via le programme Genuine Parts Distributor</li>
-          <li><strong>Self Service Repair :</strong> réparez vous-même avec <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">des pièces d'origine Apple</a></li>
-        </ul>
-        <h3>Franchises AppleCare (au lieu du prix hors garantie)</h3>
+  // 2. BATTERY SPECIFIC
+  if (s.condition === "battery") {
+    cards.push({ title:"Batterie < 80%", tag:"green", tagLabel:"Batterie", body:`
+      <p><strong>Remplacement gratuit</strong> si batterie < 80% de capacité — garantie légale, AppleCare+ ou AppleCare One.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>Apple remplace gratuitement la batterie lorsqu'elle conserve moins de 80% de sa capacité originale, quel que soit le contrat (garantie légale, AppleCare+, AppleCare One).</p>
+        <p>Sans AppleCare et hors garantie, le remplacement de batterie est payant au tarif forfaitaire (ex: 89€ iPhone, 289€ MacBook Pro 16"). Voir <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">l'outil de tarifs</a>.</p>
+      </div>
+    `});
+  }
+
+  // 3. DOMMAGES ACCIDENTELS / LIQUIDE
+  if (s.condition === "accidental" || s.condition === "liquid") {
+    const fee = s.condition === "liquid" ? p.acOther : p.acOther;
+    cards.push({ title:"Dommage accidentel / liquide", tag:"orange", tagLabel:"Hors garantie", body:`
+      <p><strong>Garantie légale :</strong> ne couvre pas. <strong>AppleCare+ :</strong> franchise ${p.acScreen} (écran) / ${p.acOther} (autre). <strong>Sans AppleCare :</strong> tarif hors garantie.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>La garantie légale de conformité couvre uniquement les défauts existant au moment de la livraison — pas les dommages accidentels ou liquides.</p>
+        <p>AppleCare+ et AppleCare One couvrent les dommages accidentels avec une franchise fixe au lieu du tarif complet hors garantie.</p>
         <table class="price-table">
           <tr><th>Produit</th><th>Écran/verre</th><th>Autre dommage</th></tr>
           <tr><td>iPhone</td><td>29 €</td><td>99 €</td></tr>
           <tr><td>iPad</td><td>29 €</td><td>49–99 €</td></tr>
           <tr><td>Mac</td><td>99 €</td><td>259 €</td></tr>
           <tr><td>Apple Watch</td><td>—</td><td>65–75 €</td></tr>
+          <tr><td>AirPods</td><td>—</td><td>29 €</td></tr>
           <tr><td>Vision Pro</td><td>—</td><td>299 €</td></tr>
         </table>
-        <div class="callout">
-          <p><strong>Batterie :</strong> Le remplacement de batterie est <strong>gratuit</strong> si elle conserve moins de 80% de sa capacité, que ce soit avec la garantie légale, AppleCare+ ou AppleCare One.</p>
-        </div>
+        <p>AppleCare One (20,99€/mois, 3 produits) inclut aussi la garantie perte ou vol : franchise 129€ (iPhone/iPad), 119€ (Apple Watch).</p>
+        <p><a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales Apple</a> · <a href="https://repairprice.popalazerk.com" target="_blank" rel="noopener">Tarifs complets</a></p>
       </div>
-    `);
+    `});
   }
 
-  if (verdict === "partial" && purchase === "secondhand") {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag orange">Achat d'occasion</span> Vos droits limités</h2>
-        <p>L'achat d'occasion entre particuliers n'est <strong>pas couvert par la garantie légale de conformité</strong> (celle-ci s'applique uniquement aux ventes par des professionnels).</p>
-        <h3>Si acheté à un professionnel (reconditionné avec garantie)</h3>
-        <ul>
-          <li>La garantie légale de 2 ans <strong>s'applique</strong> si le vendeur est un professionnel</li>
-          <li>Le vendeur professionnel doit garantir la conformité du produit reconditionné</li>
-          <li>La garantie commerciale proposée par le vendeur s'ajoute à la garantie légale</li>
-        </ul>
-        <h3>Si acheté entre particuliers</h3>
-        <ul>
-          <li>Pas de garantie légale — uniquement les garanties contractuelles convenues</li>
-          <li>Le <strong>droit à la réparation hors garantie</strong> peut toutefois s'appliquer auprès d'Apple (si l'appareil figure dans l'Annexe II et est dans la période 5–10 ans)</li>
-          <li>Le <strong>bonus réparation français</strong> (15–60€) est disponible chez les réparateurs labellisés <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">QualiRépar</a></li>
-        </ul>
+  // 4. RÉPARATION PAR UN TIERS
+  if (s.prior-repair === "third-party" || s.prior-repair === "self") {
+    const isSelf = s.prior-repair === "self";
+    cards.push({ title:`Réparation antérieure ${isSelf ? "(self-service)" : "(tiers)"}`, tag:"orange", tagLabel:"Attention", body:`
+      <p><strong>Directive 2024/1799 :</strong> Apple ne peut pas refuser une réparation au seul motif qu'un tiers a déjà réparé. Informer Apple de toute modification.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>La directive interdit aux fabricants de refuser une réparation parce qu'un tiers (ou le consommateur lui-même) a déjà réparé le produit.</p>
+        <p>Apple peut toutefois facturer un diagnostic (jusqu'à 100€ dans l'UE) si la panne résulte de la réparation antérieure. La garantie n'est pas affectée par une réparation Self Service Repair, mais tout dommage causé pendant l'opération ne sera pas couvert.</p>
+        <p>Apple doit être informée de toute modification non autorisée ou réparation par un tiers lors de la commande de service.</p>
+        <p><a href="http://data.europa.eu/eli/dir/2024/1799/oj" target="_blank" rel="noopener">Directive, considérant 24</a> · <a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions Apple</a></p>
       </div>
-    `);
+    `});
   }
 
-  if (verdict === "not-eligible") {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag red">Aucune obligation</span> Options restantes</h2>
-        <p>Aucune obligation légale ne s'applique plus, mais des options de réparation existent :</p>
-        <ul>
-          <li><strong>Réparateur indépendant</strong> — trouvez-en un sur <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">Épargnons nos ressources (ADEME)</a></li>
-          <li><strong>Bonus réparation français</strong> — 15€ à 60€ de réduction chez un réparateur <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">QualiRépar</a></li>
-          <li><strong>Self Service Repair</strong> — <a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">pièces d'origine Apple</a> pour réparer vous-même</li>
-          <li><strong>Reconditionnement</strong> — l'appareil peut être repris pour reconditionnement</li>
-        </ul>
-        <p>Source : <a href="https://www.ecosystem.eco/comprendre/bonus-reparation" target="_blank" rel="noopener">Bonus réparation — écosystème.eco</a></p>
+  // 5. DÉFINITIONS (toujours affichées)
+  cards.push({ title:"Définitions utiles", tag:"", tagLabel:"", body:`
+    <p><strong>Garantie légale (2 ans)</strong> = obligation légale gratuite, couvre les défauts de fabrication. <strong>AppleCare+ = contrat payant</strong> optionnel, couvre aussi les dommages accidentels avec franchise.</p>
+    <p><strong>Remplacement</strong> = Apple fournit un appareil neuf <strong>ou reconditionné</strong> (pièces d'origine Apple neuves et/ou précédemment utilisées, testées).</p>
+    <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+    <div class="expand-content">
+      <h4 style="font-size:13px;font-weight:600;margin:0 0 6px;">Garantie légale vs garantie constructeur</h4>
+      <table class="price-table">
+        <tr><th></th><th>Garantie légale</th><th>AppleCare+ / One</th></tr>
+        <tr><td>Obligation</td><td>Légale (UE + FR)</td><td>Contractuelle</td></tr>
+        <tr><td>Durée</td><td>2 ans (+1 si réparation)</td><td>Tant que payé</td></tr>
+        <tr><td>Prix</td><td>Gratuit</td><td>1,49–20,99 €/mois</td></tr>
+        <tr><td>Couverture</td><td>Défauts uniquement</td><td>Défauts + accidentel</td></tr>
+        <tr><td>Responsable</td><td>Le vendeur</td><td>Apple</td></tr>
+        <tr><td>Franchise</td><td>Aucune</td><td>29–299 €</td></tr>
+      </table>
+      <h4 style="font-size:13px;font-weight:600;margin:12px 0 6px;">Remplacement : neuf ou reconditionné ?</h4>
+      <p>Apple : « pièces ou produits constitués de pièces d'origine Apple neuves et/ou précédemment utilisées, qui ont été testées et répondent aux exigences fonctionnelles d'Apple. »</p>
+      <p>En pratique, la majorité des remplacements hors Apple Store sont des appareils reconditionnés équivalents au modèle du client. Si le vendeur impose le remplacement pendant la garantie légale, celle-ci est renouvelée 2 ans.</p>
+      <p>La directive 2024/1799 autorise le fabricant à proposer un produit reconditionné si la réparation est « impossible ».</p>
+      <p><a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales Apple</a> · <a href="https://www.apple.com/legal/warranty/statutoryrights.html" target="_blank" rel="noopener">Droits consommateurs</a></p>
+    </div>
+  `});
+
+  // 6. MESURES FRANÇAISES (si pertinent)
+  if (verdict !== "not-eligible" || s.age === "5-10" || s.age === "over-10") {
+    cards.push({ title:"Mesures françaises", tag:"", tagLabel:"", body:`
+      <p><strong>Bonus réparation :</strong> 15–60€ de réduction chez un réparateur <a href="https://www.label-qualirepar.fr/" target="_blank" rel="noopener">QualiRépar</a>. <strong>Obsolescence programmée :</strong> délit pénal (2 ans prison, 300 000€ amende).</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p><strong>Bonus réparation (loi AGEC 2020) :</strong> financé par le dispositif pollueur-payeur. Réduit le coût de 15€ à 60€ chez les réparateurs labellisés QualiRépar. 73 produits éligibles dont téléphones, TV, ordinateurs. Liste sur <a href="https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes" target="_blank" rel="noopener">écosystème.eco</a>.</p>
+        <p><strong>Indice de réparabilité (2021) :</strong> score 1–10 obligatoire pour smartphones, ordinateurs, TVs, etc. <strong>Indice de durabilité (2025) :</strong> plus complet, pour téléviseurs et lave-linge.</p>
+        <p><strong>Obsolescence programmée :</strong> toute technique (y compris logicielle) rendant impossible la réparation par un tiers est interdite. Peine : 2 ans de prison et 300 000€ d'amende (<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000032225325/" target="_blank" rel="noopener">art. L.441-2 Code de la consommation</a>).</p>
+        <p><strong>Plateforme ADEME :</strong> <a href="https://epargnonsnosressources.gouv.fr/" target="_blank" rel="noopener">epargnonsnosressources.gouv.fr</a> pour trouver un réparateur.</p>
+        <p><a href="https://www.europe-consommateurs.eu/thematiques/garanties/apres-achat/reparation/" target="_blank" rel="noopener">Europe Consommateurs</a> · <a href="https://www.ecologie.gouv.fr/indice-reparabilite" target="_blank" rel="noopener">Indice de réparabilité</a></p>
       </div>
-    `);
+    `});
   }
 
-  // === ADD FRENCH MEASURES CARD (always for French users) ===
-  if (verdict !== "not-eligible" || age === "5-10") {
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag">France</span> Mesures françaises applicables</h2>
-        <h3>Bonus réparation</h3>
-        <p>La France a mis en place un <strong>bonus réparation</strong> financé par le dispositif « pollueur-payeur ». Il réduit le coût de réparation de <strong>15€ à 60€</strong> selon le produit, chez les réparateurs labellisés <strong>QualiRépar</strong>. Liste des produits éligibles sur <a href="https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes" target="_blank" rel="noopener">écosystème.eco</a>.</p>
-        <h3>Indice de réparabilité et indice de durabilité</h3>
-        <p>Depuis 2021, la France impose l'affichage d'un <strong>indice de réparabilité</strong> (score 1–10) pour de nombreux produits électroniques. Depuis 2025, un <strong>indice de durabilité</strong> plus complet s'applique aux téléviseurs et lave-linge. Ces indices vous informent sur la capacité à réparer et la fiabilité du produit avant l'achat.</p>
-        <h3>Obsolescence programmée</h3>
-        <div class="callout warn">
-          <p><strong>En France, l'obsolescence programmée est un délit pénal</strong> puni de <strong>2 ans de prison et 300 000€ d'amende</strong> (<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000032225325/" target="_blank" rel="noopener">article L.441-2 du Code de la consommation</a>). Toute technique (y compris logicielle) rendant impossible la réparation par un tiers est <strong>interdite</strong>.</p>
-        </div>
-        <p>Source : <a href="https://www.europe-consommateurs.eu/thematiques/garanties/apres-achat/reparation/" target="_blank" rel="noopener">Europe Consommateurs</a> · <a href="https://www.ecologie.gouv.fr/indice-reparabilite" target="_blank" rel="noopener">Indice de réparabilité</a></p>
+  // 7. ANNEXE II INFO (si produit Apple concerné)
+  if (p.annexII) {
+    cards.push({ title:`${p.name} — Annexe II`, tag:"green", tagLabel:"Produit concerné", body:`
+      <p>${p.name} figure dans l'Annexe II (règlement ${p.reg}). Pièces disponibles, prix raisonnable, pas de parts pairing.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p>Le règlement (UE) ${p.reg} impose à Apple : disponibilité des pièces de rechange, accès aux informations de réparation, outils de diagnostic, prix raisonnable, interdiction des techniques entravant la réparation (parts pairing).</p>
+        <p>En avril 2025, Apple a autorisé l'utilisation de <strong>pièces d'occasion</strong> pour les réparations d'iPhone — un changement lié à la pression réglementaire européenne.</p>
+        <p>Self Service Repair couvre ${p.name === "iPhone" ? "65 produits (iPhone 12+)" : "iPad Air M2+, iPad Pro M4, iPad mini A17 Pro, iPad A16"} dans 34 pays. Location d'outils : 59,95€/semaine.</p>
+        <p><a href="https://selfservicerepair.eu/fr-FR" target="_blank" rel="noopener">Self Service Repair</a> · <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1670" target="_blank" rel="noopener">Règlement ${p.reg}</a></p>
       </div>
-    `);
-  }
-
-  // === ADD PRODUCT-SPECIFIC CARD ===
-  if (verdict === "eligible" || verdict === "partial") {
-    const isAnnexII = age !== "over-10";
-    cards.push(`
-      <div class="info-card">
-        <h2><span class="tag">Produits Apple</span> iPhone et iPad dans l'Annexe II</h2>
-        <p>Les <strong>iPhone</strong> (smartphones) et <strong>iPad</strong> (tablettes) figurent dans l'Annexe II de la directive 2024/1799, au titre du <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1670" target="_blank" rel="noopener">règlement (UE) 2023/1670</a> sur l'écoconception des téléphones portables et tablettes.</p>
-        <h3>Ce que ce règlement impose à Apple</h3>
-        <ul>
-          <li>Disponibilité des pièces de rechange pendant une période définie</li>
-          <li>Accès aux informations de réparation et outils de diagnostic</li>
-          <li>Pièces à un <strong>prix raisonnable</strong> ne dissuadant pas la réparation</li>
-          <li>Interdiction des techniques matérielles/logicielles entravant la réparation (parts pairing)</li>
-        </ul>
-        <div class="callout">
-          <p><strong>En avril 2025</strong>, Apple a annoncé l'autorisation d'utiliser des <strong>pièces d'occasion</strong> pour les réparations d'iPhone — un changement significatif lié à la pression réglementaire européenne.</p>
-        </div>
-      </div>
-    `);
+    `});
   }
 
   return { verdict, title, summary, cards };
 }
 
-// ========== STATE & LOGIC ==========
-const state = { purchase: "", age: "", condition: "", "prior-repair": "" };
+// ========== UI ==========
+const state = { product:"", purchase:"", age:"", condition:"", "prior-repair":"" };
+
+function toggleExpand(link) {
+  const content = link.nextElementSibling;
+  link.classList.toggle('open');
+  content.classList.toggle('open');
+}
 
 function buildQuestionnaire() {
   const container = document.getElementById('questionnaire');
@@ -549,7 +472,6 @@ function buildQuestionnaire() {
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     `;
     container.appendChild(box);
-
     const sel = box.querySelector('select');
     const val = box.querySelector('.value');
     sel.addEventListener('change', e => {
@@ -562,34 +484,19 @@ function buildQuestionnaire() {
 
 function renderResult() {
   const panel = document.getElementById('result-panel');
-  const allAnswered = QUESTIONS.every(q => state[q.id]);
-
-  if (!allAnswered) {
-    const answered = QUESTIONS.filter(q => state[q.id]).length;
-    panel.innerHTML = `<div class="result-placeholder">Répondez aux ${QUESTIONS.length - answered} question${QUESTIONS.length - answered > 1 ? 's' : ''} restante${QUESTIONS.length - answered > 1 ? 's' : ''} pour découvrir vos droits.</div>`;
+  const answered = QUESTIONS.filter(q => state[q.id]).length;
+  if (answered < QUESTIONS.length) {
+    panel.innerHTML = `<div class="result-placeholder">Répondez aux ${QUESTIONS.length - answered} question${QUESTIONS.length - answered > 1 ? 's' : ''} restante${QUESTIONS.length - answered > 1 ? 's' : ''}.</div>`;
     return;
   }
+  const r = getResult(state);
+  const icons = { "eligible":"✅", "partial":"⚠️", "not-eligible":"❌" };
+  const classes = { "eligible":"eligible", "partial":"partial", "not-eligible":"not-eligible" };
 
-  const result = getVerdict(state);
-
-  const iconMap = { "eligible": "✅", "partial": "⚠️", "not-eligible": "❌" };
-  const classMap = { "eligible": "eligible", "partial": "partial", "not-eligible": "not-eligible" };
-
-  let html = `
-    <div class="verdict-box ${classMap[result.verdict]}">
-      <div class="verdict-icon">${iconMap[result.verdict]}</div>
-      <div>
-        <h2>${result.title}</h2>
-        <p>${result.summary}</p>
-      </div>
-    </div>
-  `;
-
-  html += result.cards.join('');
-
-  // Always add definitions
-  html += DEFINITIONS_HTML;
-
+  let html = `<div class="verdict-box ${classes[r.verdict]}"><div class="verdict-icon">${icons[r.verdict]}</div><div><h2>${r.title}</h2><p>${r.summary}</p></div></div>`;
+  r.cards.forEach(c => {
+    html += `<div class="quick-card"><h3>${c.tag ? `<span class="tag ${c.tag}">${c.tagLabel}</span>` : ""}${c.title}</h3>${c.body}</div>`;
+  });
   panel.innerHTML = html;
 }
 
