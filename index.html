@@ -276,26 +276,39 @@ function getResult(s) {
   const isYear1 = s.age === "under-1";
   const isYear2 = s.age === "1-2";
 
-  // Can Apple Store process this under EU law?
+  // Can Apple Store process this under EU law or manufacturer warranty?
   let canStore = false;
   let storeReason = "";
   let storeCost = "";
 
-  if (isAppleVendor && isUnderWarranty && isDefect) {
+  if (isYear1 && isDefect) {
+    // 1ère année : garantie constructeur Apple (1 an) + garantie légale si Apple est vendeur
     canStore = true;
-    storeReason = "Apple Store est le <strong>vendeur</strong> — garantie légale de conformité (2 ans). Réparation ou remplacement gratuit.";
+    if (isAppleVendor) {
+      storeReason = "<strong>Garantie légale de conformité</strong> (2 ans, vendeur) + <strong>garantie constructeur Apple</strong> (1 an). Apple Store est le vendeur et le fabricant — réparation gratuite.";
+    } else {
+      storeReason = "<strong>Garantie constructeur Apple</strong> (1 an) — Apple répare gratuitement quel que soit le lieu d'achat. La garantie légale reste à la charge du vendeur d'origine, mais le client peut choisir l'Apple Store.";
+    }
     storeCost = "Gratuit";
+  } else if (isYear2 && isDefect) {
+    // 2ème année : seule la garantie légale s'applique (vendeur)
+    if (isAppleVendor) {
+      canStore = true;
+      storeReason = "<strong>Garantie légale de conformité</strong> (2 ans) — Apple Store est le <strong>vendeur</strong>. Le client doit prouver que le défaut existait à la livraison. Garantie constructeur expirée (1 an).";
+      storeCost = "Gratuit";
+    } else {
+      canStore = false;
+      // Pas Apple Store — le vendeur d'origine est responsable
+    }
   } else if (isAnnexII && (s.age === "2-5" || s.age === "5-10") && isDefect) {
     canStore = true;
     storeReason = `Apple est le <strong>fabricant</strong> — droit à la réparation (directive 2024/1799). ${p.name} dans l'Annexe II (règlement ${p.reg}).`;
     storeCost = "Payant — prix raisonnable";
   } else if (s["prior-repair"] === "apple-replace" && isDefect) {
-    // Remplacement sous garantie = garantie renouvelée 2 ans
     canStore = true;
     storeReason = "Appareil remplacé sous garantie — garantie légale <strong>renouvelée 2 ans</strong>. Réparation gratuite.";
     storeCost = "Gratuit";
   } else if (s["prior-repair"] === "apple-repair" && isUnderWarranty && isDefect) {
-    // Réparation sous garantie = garantie prolongée 1 an
     canStore = true;
     storeReason = "Appareil réparé sous garantie — garantie légale <strong>prolongée d'un an</strong>. Réparation gratuite.";
     storeCost = "Gratuit";
@@ -311,8 +324,8 @@ function getResult(s) {
     verdict = "not-eligible";
     title = "❌ Réparation non possible en Apple Store — Loi européenne";
     // Determine why
-    if (!isAppleVendor && isUnderWarranty && isDefect) {
-      summary = `Le <strong>vendeur</strong> (${s.purchase === "other" ? "le magasin d'achat" : "le vendeur d'occasion"}) est responsable de la garantie légale, pas l'Apple Store. Rediriger le client vers son vendeur.`;
+    if (isYear2 && !isAppleVendor && isDefect) {
+      summary = `Garantie constructeur Apple expirée (1 an). Le <strong>vendeur d'origine</strong> (${s.purchase === "other" ? "le magasin d'achat" : "le vendeur d'occasion"}) reste responsable de la garantie légale (2ème année). Le client doit prouver l'antériorité du défaut. Rediriger vers le vendeur.`;
     } else if (isAccidental) {
       summary = "Dommage accidentel/liquide <strong>non couvert</strong> par la loi européenne de réparation. AppleCare+ avec franchise ou tarif hors garantie uniquement.";
     } else if (!isAnnexII && (s.age === "2-5" || s.age === "5-10") && isDefect) {
@@ -349,13 +362,14 @@ function getResult(s) {
     `});
   } else {
     let redirectBody = "";
-    if (!isAppleVendor && isUnderWarranty && isDefect) {
+    if (isYear2 && !isAppleVendor && isDefect) {
       redirectBody = `
-        <p><strong>Rediriger vers le vendeur d'origine.</strong> Le client doit s'adresser au magasin où il a acheté l'appareil.</p>
-        <p>Le vendeur (${s.purchase === "other" ? "Fnac, Darty, Amazon…" : "vendeur d'occasion professionnel"}) est seul responsable de la garantie légale de conformité (2 ans).</p>
+        <p><strong>Rediriger vers le vendeur d'origine.</strong> La garantie constructeur Apple (1 an) est expirée. Seul le vendeur est responsable de la garantie légale (2ème année).</p>
+        <p>Le vendeur (${s.purchase === "other" ? "Fnac, Darty, Amazon…" : "vendeur d'occasion professionnel"}) doit réparer ou remplacer gratuitement si le client prouve que le défaut existait à la livraison.</p>
         <p>L'Apple Store peut proposer une réparation <strong>payante</strong> hors garantie, mais le client n'a pas à payer pour un défaut couvert par la garantie légale.</p>
         <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
         <div class="expand-content">
+          <p><strong>2ème année (12–24 mois) :</strong> la garantie constructeur Apple (1 an) est expirée. La garantie légale de conformité (2 ans) continue mais le client doit prouver que le défaut existait au moment de l'achat.</p>
           <p>La garantie légale oppose le client au <strong>vendeur</strong>, pas au fabricant. Si le client a acheté son iPhone chez Fnac, c'est Fnac qui doit réparer ou remplacer gratuitement.</p>
           <p>Le client peut faire valoir la garantie légale auprès de son vendeur : <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F11094" target="_blank" rel="noopener">Service Public</a></p>
           <p>Si le vendeur refuse : <a href="https://www.europe-consommateurs.eu/thematiques/garanties/" target="_blank" rel="noopener">Europe Consommateurs</a> · <a href="https://signal.conso.gouv.fr/" target="_blank" rel="noopener">SignalConso</a></p>
