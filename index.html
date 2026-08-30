@@ -206,8 +206,8 @@ const QUESTIONS = [
     id: "purchase",
     label: "Lieu d'achat",
     options: [
-      { value: "apple-store", label: "Apple Store" },
-      { value: "other", label: "Autre vendeur (revendeur agréé, Fnac, Darty, Amazon…)" },
+      { value: "apple-store", label: "Apple Store (ou Apple via Amazon)" },
+      { value: "other", label: "Autre vendeur (Fnac, Darty, Amazon, revendeur agréé…)" },
       { value: "secondhand", label: "Occasion" }
     ]
   },
@@ -679,6 +679,7 @@ function getResult(s) {
   cards.push({ title:"Définitions utiles", tag:"", tagLabel:"", body:`
     <p><strong>Garantie légale (2 ans)</strong> = obligation légale gratuite, couvre les défauts de fabrication. <strong>AppleCare+ = contrat payant</strong> optionnel, couvre aussi les dommages accidentels avec franchise.</p>
     <p><strong>Remplacement</strong> = Apple fournit un appareil neuf <strong>ou reconditionné</strong> (pièces d'origine Apple neuves et/ou précédemment utilisées, testées).</p>
+    <p><strong>Amazon :</strong> vérifier la mention « Vendu et expédié par ». Si Apple est le vendeur → Apple Store (garantie légale + constructeur). Si Amazon est le vendeur → Autre vendeur (Amazon responsable de la garantie légale, Apple responsable de la garantie constructeur uniquement).</p>
     <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
     <div class="expand-content">
       <h4 style="font-size:13px;font-weight:600;margin:0 0 6px;">Garantie légale vs garantie constructeur</h4>
