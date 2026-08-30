@@ -164,56 +164,11 @@
 
 <div class="wrap">
   <h1>Guide loi de réparation</h1>
-  <p class="subtitle">Outil d'aide à la décision pour les conseillers Genius Bar. Sélectionnez un scénario courant ou configurez manuellement.</p>
+  <p class="subtitle">Outil d'aide à la décision pour les conseillers Genius Bar. Sélectionnez le produit et la situation du client pour connaître les droits applicables.</p>
 
-  <div class="scenarios" id="scenarios">
-    <div class="scenarios-label">Scénarios courants</div>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'apple-store',age:'under-1',condition:'defect','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat Apple Store, < 2 ans, panne, jamais réparé</span>
-      <span class="sc-desc">Garantie légale de conformité — réparation gratuite par l'Apple Store (vendeur)</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'other',age:'under-1',condition:'defect','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat autre magasin (Fnac/Darty), < 2 ans, panne</span>
-      <span class="sc-desc">Garantie légale — Apple Store n'est pas le vendeur, rediriger vers le magasin d'achat</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'apple-store',age:'2-5',condition:'accidental','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat Apple Store, 2-5 ans, écran cassé</span>
-      <span class="sc-desc">Hors garantie — réparation payante en Apple Store (AppleCare+ si souscrit)</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'apple-store',age:'2-5',condition:'defect','prior-repair':'apple-repair'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat Apple Store, 2-5 ans, panne, déjà réparé par Apple (hors garantie)</span>
-      <span class="sc-desc">Réparation payante — pas de prolongation de garantie légale (art. 4, pas art. 17)</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'apple-store',age:'under-1',condition:'defect','prior-repair':'apple-repair'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat Apple Store, < 2 ans, panne, déjà réparé sous garantie</span>
-      <span class="sc-desc">Garantie prolongée d'un an (art. 17) — réparation gratuite</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'apple-store',age:'under-1',condition:'defect','prior-repair':'apple-replace'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Achat Apple Store, < 2 ans, panne, déjà remplacé sous garantie</span>
-      <span class="sc-desc">Garantie renouvelée 2 ans (art. L217-11) — réparation gratuite</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'mac',purchase:'apple-store',age:'2-5',condition:'defect','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">💻</span>Mac — Achat Apple Store, 2-5 ans, panne</span>
-      <span class="sc-desc">Mac hors Annexe II — Apple n'est pas tenue de réparer, mais peut le faire (payant)</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'ipad',purchase:'apple-store',age:'5-10',condition:'battery','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">📋</span>iPad — Achat Apple Store, 5-10 ans, batterie < 80%</span>
-      <span class="sc-desc">Droit à la réparation (Annexe II) — Apple doit réparer, payant à prix raisonnable</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'watch',purchase:'apple-store',age:'2-5',condition:'defect','prior-repair':'none'})">
-      <span class="sc-title"><span class="sc-icon">⌚</span>Apple Watch — Achat Apple Store, 2-5 ans, panne</span>
-      <span class="sc-desc">Watch hors Annexe II — pas d'obligation légale, rediriger vers QualiRépar</span>
-    </button>
-    <button class="scenario-btn" onclick="applyScenario(this,{product:'iphone',purchase:'secondhand',age:'2-5',condition:'defect','prior-repair':'third-party'})">
-      <span class="sc-title"><span class="sc-icon">📱</span>iPhone — Occasion, 2-5 ans, panne, déjà réparé par un tiers</span>
-      <span class="sc-desc">Droit à la réparation (Annexe II) — Apple ne peut refuser, payant</span>
-    </button>
-  </div>
-
-  <div class="scenarios-label" style="max-width:480px;margin:0 auto 12px;">Ou configurer manuellement</div>
   <div class="select-group" id="questionnaire"></div>
   <div class="result-panel" id="result-panel">
-    <div class="result-placeholder">Sélectionnez un scénario courant ou configurez manuellement ci-dessous.</div>
+    <div class="result-placeholder">Sélectionnez le produit et la situation du client.</div>
   </div>
 
   <div class="disclaimer">
