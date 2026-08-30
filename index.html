@@ -655,10 +655,19 @@ function getResult(s) {
     // Dommage accidentel — pas de garantie légale
     garantApresBody = `
       <table class="price-table">
-        <tr><th></th><th>Garantie légale</th><th>Garantie Apple</th></tr>
-        <tr><td><strong>Réparation payante (dommage accidentel)</strong></td><td><strong>Aucune</strong> — non couverte</td><td><strong>90 jours</strong> sur la réparation</td></tr>
+        <tr><th></th><th>Garantie légale (vendeur d'origine)</th><th>Garantie Apple</th></tr>
+        <tr><td><strong>Remplacement payant (dommage accidentel)</strong></td><td><strong>Inchangée</strong> — le vendeur d'origine reste responsable<br>Apple ne devient PAS le nouveau vendeur<br>(art. 17 et L217-11 ne s'appliquent pas)</td><td><strong>90 jours</strong> sur le remplacement</td></tr>
       </table>
-      <p>Les dommages accidentels ne sont couverts ni par la garantie légale, ni par la garantie constructeur. AppleCare+ couvre avec franchise. Apple garantit la réparation 90 jours.</p>
+      <div class="callout warn"><p><strong>Important :</strong> un remplacement payant pour dommage accidentel est un <strong>contrat de service commercial</strong> avec Apple, pas un acte de garantie légale. Le client n'a pas "acheté" un nouvel iPhone — il a payé un service. Le vendeur d'origine (ex: Fnac) reste le seul responsable de la garantie légale de conformité.</p></div>
+      <p>Apple garantit l'appareil de remplacement pendant <strong>90 jours</strong> (garantie commerciale). La garantie légale avec le vendeur d'origine <strong>continue normalement</strong> jusqu'à expiration des 2 ans après l'achat initial.</p>
+      <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
+      <div class="expand-content">
+        <p><strong>Pourquoi le vendeur d'origine reste-t-il responsable ?</strong> La garantie légale de conformité lie le client au vendeur pour la durée de 2 ans. Un remplacement payant hors garantie n'est pas un achat — c'est un service de réparation. Le vendeur original conserve donc sa responsabilité sur le produit d'origine (ou ses 2 ans).</p>
+        <p><strong>Pourquoi l'art. 17 ne s'applique pas ?</strong> L'art. 17 prolonge la garantie uniquement pour les réparations effectuées "dans le cadre de la garantie légale de conformité" (défaut de conformité, pas dommage accidentel).</p>
+        <p><strong>Pourquoi l'art. L217-11 ne s'applique pas ?</strong> Cet article renouvelle la garantie 2 ans uniquement si le <strong>vendeur impose</strong> le remplacement pendant la garantie légale. Un remplacement payant pour dommage accidentel n'est pas imposé par le vendeur — c'est une prestation commerciale.</p>
+        <p><strong>Et si le remplacement est sous AppleCare+ ?</strong> Même logique : AppleCare+ est un contrat commercial, pas la garantie légale. Le remplacement est payé via la franchise AppleCare+. Le vendeur d'origine reste responsable de la garantie légale, Apple garantit le remplacement 90 jours.</p>
+        <p><a href="https://www.apple.com/legal/sales-support/terms/repair/generalservice/servicetermsfr" target="_blank" rel="noopener">Conditions générales Apple</a> · <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000032225325/" target="_blank" rel="noopener">Art. L217-11 Code de la consommation</a></p>
+      </div>
     `;
   } else {
     // Cas par défaut
@@ -669,6 +678,7 @@ function getResult(s) {
         <tr><td>Réparation sous garantie constructeur (achat ailleurs, 1ère année)</td><td><strong>Inchangée</strong> — art. 17 ne s'applique pas</td><td>90 jours</td></tr>
         <tr><td>Réparation hors garantie (payante)</td><td><strong>Aucune prolongation</strong></td><td>90 jours</td></tr>
         <tr><td>Remplacement imposé sous garantie (achat Apple Store)</td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)</td><td>90 jours</td></tr>
+        <tr><td>Remplacement payant (dommage accidentel)</td><td><strong>Inchangée</strong> — vendeur d'origine reste responsable<br>Apple ne devient pas vendeur</td><td>90 jours</td></tr>
       </table>
     `;
   }
