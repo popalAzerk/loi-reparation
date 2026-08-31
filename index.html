@@ -590,8 +590,8 @@ function getResult(s) {
     garantApresBody = `
       <table class="price-table">
         <tr><th></th><th>Garantie légale</th><th>Garantie Apple</th></tr>
-        <tr><td><strong>Réparation choisie</strong></td><td><strong>+1 an</strong> (art. 17)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
-        <tr><td><strong>Remplacement imposé</strong></td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
+        <tr><td><strong>Réparation choisie</strong></td><td><strong>+6 mois</strong> (art. L217-13, FR)<br>ou <strong>+1 an</strong> (directive UE, art. 17)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
+        <tr><td><strong>Remplacement imposé</strong></td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)<br>à compter du remplacement<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
       </table>
       <p>Apple Store est <strong>vendeur et fabricant</strong> : la réparation est effectuée sous garantie légale de conformité. L'art. 17 s'applique → garantie prolongée d'un an.</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
@@ -625,8 +625,8 @@ function getResult(s) {
     garantApresBody = `
       <table class="price-table">
         <tr><th></th><th>Garantie légale</th><th>Garantie Apple</th></tr>
-        <tr><td><strong>Réparation choisie</strong></td><td><strong>+1 an</strong> (art. 17)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
-        <tr><td><strong>Remplacement imposé</strong></td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
+        <tr><td><strong>Réparation choisie</strong></td><td><strong>+6 mois</strong> (art. L217-13, FR)<br>ou <strong>+1 an</strong> (directive UE, art. 17)<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
+        <tr><td><strong>Remplacement imposé</strong></td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)<br>à compter du remplacement<br>Responsable : Apple Store (vendeur)</td><td>90 jours sur la réparation</td></tr>
       </table>
       <p>Apple Store est le <strong>vendeur</strong> : la réparation est sous garantie légale. L'art. 17 s'applique → garantie prolongée d'un an. Garantie constructeur expirée (1 an).</p>
       <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
@@ -674,7 +674,7 @@ function getResult(s) {
     garantApresBody = `
       <table class="price-table">
         <tr><th>Type de réparation</th><th>Garantie légale</th><th>Garantie Apple</th></tr>
-        <tr><td>Réparation sous garantie légale (défaut, achat Apple Store)</td><td><strong>+1 an</strong> (art. 17) — vendeur responsable</td><td>90 jours</td></tr>
+        <tr><td>Réparation sous garantie légale (défaut, achat Apple Store)</td><td><strong>+6 mois</strong> (art. L217-13, FR) ou <strong>+1 an</strong> (directive UE)<br>à compter de la réparation — vendeur responsable</td><td>90 jours</td></tr>
         <tr><td>Réparation sous garantie constructeur (achat ailleurs, 1ère année)</td><td><strong>Inchangée</strong> — art. 17 ne s'applique pas</td><td>90 jours</td></tr>
         <tr><td>Réparation hors garantie (payante)</td><td><strong>Aucune prolongation</strong></td><td>90 jours</td></tr>
         <tr><td>Remplacement imposé sous garantie (achat Apple Store)</td><td><strong>Renouvelée 2 ans</strong> (art. L217-11)</td><td>90 jours</td></tr>
@@ -692,6 +692,7 @@ function getResult(s) {
     <p><strong>Amazon :</strong> vérifier la mention « Vendu et expédié par ». Si Apple est le vendeur → Apple Store (garantie légale + constructeur). Si Amazon est le vendeur → Autre vendeur (Amazon responsable de la garantie légale, Apple responsable de la garantie constructeur uniquement).</p>
     <p><strong>Achat à l'étranger (UE + EEE) :</strong> la garantie légale s'applique dans toute l'UE (27 pays) + EEE (Norvège, Islande, Liechtenstein). Durée variable : 2 ans (France, Allemagne, Italie), 3 ans (Espagne, Portugal, Suède), 5 ans (Norvège, Islande), 6 ans (Irlande, Finlande). Le vendeur étranger est responsable. Garantie constructeur Apple valable dans toute l'UE. Litige transfrontalier : <a href="https://www.europe-consommateurs.eu/" target="_blank" rel="noopener">Centre Européen des Consommateurs</a>.</p>
     <p><strong>Date d'application du droit à la réparation (art. 4) :</strong> la directive (UE) 2024/1799 s'applique aux <strong>achats effectués à partir du 31 juillet 2026</strong>. Pour les achats antérieurs, seule la garantie légale de conformité (2 ans) et la garantie constructeur (1 an) s'appliquent. L'obligation du fabricant de réparer les produits de l'Annexe II (iPhone, iPad…) au-delà de la garantie s'applique donc uniquement aux appareils achetés après cette date.</p>
+    <p><strong>Prolongation après réparation :</strong> la prolongation démarre à la <strong>date de réparation</strong> (pas la date d'achat). La directive prévoit <strong>+1 an</strong> mais le Code de la consommation français (art. L217-13) indique encore <strong>+6 mois</strong> — la transposition à 12 mois n'est pas encore effective en France. Le remplacement imposé par le vendeur renouvelle la garantie <strong>2 ans à compter du remplacement</strong> (art. L217-11).</p>
     <span class="expand-link" onclick="toggleExpand(this)">En savoir plus</span>
     <div class="expand-content">
       <h4 style="font-size:13px;font-weight:600;margin:0 0 6px;">Garantie légale vs garantie constructeur</h4>
