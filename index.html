@@ -946,7 +946,7 @@ function getResultRetour(s) {
       <p><strong>Remboursement :</strong> toutes les sommes (produit + livraison standard) dans les <strong>14 jours</strong> suivant la notification ; le vendeur peut différer jusqu'à récupération du bien ou preuve d'expédition. Remboursement sur le mode de paiement d'origine.</p>
       <p><strong>Frais de retour :</strong> à la charge du client (sauf si le vendeur les prend en charge ou ne les a pas signalés avant l'achat).</p>
       <p><strong>Exclusions légales (art. L221-28 Code conso) :</strong> biens confectionnés/personnalisés (gravure, config sur mesure), biens périssables, biens descellés après livraison non renvoyables pour raisons d'hygiène, logiciels/enregistrements descellés.</p>
-      <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F10485" target="_blank" rel="noopener">Service-public.fr — Rétractation</a> · <a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a></p>`;
+      <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F10485" target="_blank" rel="noopener">Service-public.fr — Rétractation</a></p>`;
     let rTitle, rTag, rTagLabel, rBody;
     if (s.retract === "remote-intact") {
       rTitle = "Rétractation acceptée — droit légal (14 jours)";
@@ -960,7 +960,7 @@ function getResultRetour(s) {
       rTag = "amber"; rTagLabel = "À évaluer";
       rBody = `
         <p>Le droit de rétractation s'applique <strong>même si le client a ouvert l'emballage</strong>, tant qu'il a simplement examiné le produit. La seule limite : si l'ouverture le rend <strong>non revendable</strong> pour raisons d'hygiène ou de santé.</p>
-        <p><strong>Concrètement en Apple Store :</strong> un iPhone/iPad/Mac déballé mais complet (accessoires, câbles, emballage) est en principe <strong>repris et remboursé</strong>. Un produit avec accessoires descellés à usage hygiénique (écouteurs intra-auriculaires AirPods, protections auditives) peut être <strong>refusé au retour</strong> si l'hygiène est compromise.</p>
+        <p><strong>Concrètement :</strong> un appareil déballé mais complet (accessoires, câbles, emballage) est en principe <strong>repris et remboursé</strong> — chaque enseigne applique sa propre appréciation (politique de retour ou délai commercial). Un produit avec accessoires descellés à usage hygiénique (écouteurs intra-auriculaires, protections auditives) peut être <strong>refusé au retour</strong> si l'hygiène est compromise.</p>
         <p><strong>Astuce :</strong> vérifier que toutes les pièces sont présentes ; si un élément manque, un remboursement réduit peut être appliqué (responsabilité de l'utilisateur, art. L221-23).</p>
         ${RETRACT_LAW}`;
     } else if (s.retract === "store-return") {
@@ -968,10 +968,8 @@ function getResultRetour(s) {
       rTag = "amber"; rTagLabel = "Politique commerciale";
       rBody = `
         <p><strong>Attention : en magasin physique, il n'y a PAS de droit de rétractation légal.</strong> Le droit de 14 jours ne s'applique qu'aux achats <strong>à distance</strong> (en ligne, téléphone, démarchage).</p>
-        <p><strong>Chez Apple Retail France :</strong> retour volontaire <strong>dans les 14 jours calendaires</strong> suivant le retrait, sur présentation du reçu, avec emballage, pièces et accessoires d'origine → échange ou remboursement selon le mode de paiement initial. C'est une <strong>gracieuseté commerciale</strong>.</p>
-        <p><strong>Chez les autres enseignes :</strong> consulter leur politique de retour (sélectionnez l'enseigne ci-dessous pour les conditions détaillées). Certaines offrent 15 jours (Fnac, Darty, Boulanger), d'autres uniquement un échange ou un avoir.</p>
-        <p><strong>Conditions communes :</strong> état d'origine, complet, avec facture/reçu. Retours &gt; 1 019 € en espèces chez Apple : virement bancaire. Les produits achetés chez un revendeur doivent être retournés <strong>chez ce revendeur</strong>.</p>
-        <p><a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France — Politique de retour</a></p>`;
+        <p><strong>La politique de l'enseigne s'applique</strong> (sélectionnez l'enseigne ci-dessous pour les conditions détaillées) : Apple Retail accepte volontairement 14 jours (reçu + état d'origine), Fnac/Darty/Boulanger offrent 15 jours, d'autres uniquement un échange ou un avoir.</p>
+        <p><strong>Conditions communes :</strong> état d'origine, complet, avec facture/reçu. Les produits achetés chez un revendeur doivent être retournés <strong>chez ce revendeur</strong>.</p>`;
     } else if (s.retract === "remote-store-click") {
       rTitle = "Commandé en ligne, retourné en magasin — droit légal";
       rTag = "green"; rTagLabel = "Droit légal 14 j";
@@ -979,7 +977,6 @@ function getResultRetour(s) {
         <p>Le produit a été vendu <strong>à distance</strong> (commande en ligne, retrait en magasin, click &amp; collect) : le <strong>droit de rétractation de 14 jours s'applique intégralement</strong>, peu importe le mode de retour choisi par le client.</p>
         <p><strong>Retourner en magasin :</strong> l'enseigne peut accepter le retour sur site — le client conserve tous ses droits légaux (remboursement intégral : produit + frais de livraison standard, sous 14 jours).</p>
         <p><strong>Chez Apple :</strong> un produit commandé sur apple.com peut être retourné <strong>en Apple Store</strong> ou par voie postale (formulaire en ligne, 0800 046 046). Le remboursement suit le mode de paiement d'origine.</p>
-        <p><strong>Chez Fnac/Darty/Boulanger :</strong> retrait en magasin d'une commande en ligne = vente à distance → retour en magasin accepté dans le délai commercial (15 jours) ou légal (14 jours).</p>
         <p><strong>Piège à éviter :</strong> si le vendeur refuse le retour en magasin en invoquant l'absence de rétractation « en boutique », il se trompe — c'est le <strong>mode de vente</strong> (à distance) qui compte, pas le lieu du retour.</p>
         ${RETRACT_LAW}`;
     } else if (s.retract === "store-online") {
@@ -987,7 +984,7 @@ function getResultRetour(s) {
       rTag = "amber"; rTagLabel = "Hors rétractation";
       rBody = `
         <p>L'achat a été fait <strong>en magasin physique</strong> : <strong>pas de droit de rétractation légal</strong>, quel que soit le canal de retour utilisé ensuite.</p>
-        <p><strong>Retour postal :</strong> uniquement si l'enseigne l'accepte <strong>commercialement</strong>. Apple précise dans ses CGV que « vous pouvez uniquement retourner les produits dans le pays où vous les avez achetés » — en pratique, un achat fait en Apple Store se retourne <strong>sur place</strong>.</p>
+        <p><strong>Retour postal :</strong> uniquement si l'enseigne l'accepte <strong>commercialement</strong> (Apple exige par exemple le retour dans le pays d'achat — en pratique, un achat fait en Apple Store se retourne <strong>sur place</strong>).</p>
         <p><strong>Si l'enseigne refuse :</strong> le client ne peut pas exiger un retour postal légal. Seules options : négociation commerciale (échange, avoir) ou, si le produit est <strong>défectueux</strong>, la garantie légale de conformité (2 ans) chez le vendeur.</p>
         <p><strong>Astuce Genius Bar :</strong> pour un client qui veut renvoyer un produit acheté en magasin, l'orienter vers le magasin d'origine avec sa facture — ou vérifier s'il a en fait commandé en ligne (dans ce cas, rétractation applicable).</p>
         ${RETRACT_LAW}`;
