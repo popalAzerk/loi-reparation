@@ -191,6 +191,7 @@
 const QUESTIONS = [
   {
     id: "product",
+    modes: ["garantie", "retour"],
     label: "Produit",
     options: [
       { value: "iphone", label: "iPhone" },
@@ -204,6 +205,7 @@ const QUESTIONS = [
   },
   {
     id: "retract",
+    modes: ["retour"],
     label: "Retour / rétractation",
     options: [
       { value: "none", label: "Non — le client veut faire réparer" },
@@ -215,6 +217,7 @@ const QUESTIONS = [
   },
   {
     id: "enseigne",
+    modes: ["retour"],
     label: "Enseigne d'achat",
     options: [
       { value: "none", label: "Non concerné / pas de question retour" },
@@ -230,6 +233,7 @@ const QUESTIONS = [
   },
   {
     id: "purchase",
+    modes: ["garantie"],
     label: "Lieu d'achat",
     options: [
       { value: "apple-store", label: "Apple Store (ou Apple via Amazon)" },
@@ -239,6 +243,7 @@ const QUESTIONS = [
   },
   {
     id: "age",
+    modes: ["garantie"],
     label: "Âge de l'appareil",
     options: [
       { value: "under-1", label: "1ère année (0–12 mois)" },
@@ -250,6 +255,7 @@ const QUESTIONS = [
   },
   {
     id: "condition",
+    modes: ["garantie"],
     label: "Motif de la visite",
     options: [
       { value: "defect", label: "Panne / défaut de fabrication" },
@@ -260,6 +266,7 @@ const QUESTIONS = [
   },
   {
     id: "prior-repair",
+    modes: ["garantie"],
     label: "Historique de l'appareil",
     options: [
       { value: "none", label: "Jamais réparé ni remplacé" },
@@ -793,6 +800,40 @@ function getResult(s) {
     `});
   }
 
+  return { verdict, title, summary, cards };
+}
+
+function getResultRetour(s) {
+  const cards = [];
+  let verdict, title, summary;
+  if (s.retract === "remote-intact") {
+    verdict = "eligible";
+    title = "Retour accepté — droit de rétractation (14 jours)";
+    summary = `Achat à distance : le client peut renvoyer le produit <strong>sans motif</strong> dans les <strong>14 jours</strong> suivant la livraison — remboursement intégral (produit + livraison standard).`;
+  } else if (s.retract === "remote-open") {
+    verdict = "partial";
+    title = "Retour possible — à évaluer selon l'état";
+    summary = `L'ouverture de l'emballage n'exclut pas la rétractation tant que le produit reste revendable (hygiène/santé). Vérifier complétude et état d'origine.`;
+  } else if (s.retract === "store-return") {
+    verdict = "partial";
+    title = "Retour de courtoisie Apple — 14 jours";
+    summary = `En magasin physique, le retour 14 jours est une <strong>politique commerciale</strong> Apple (reçu + état d'origine complet), pas une obligation légale.`;
+  } else if (s.retract === "customized") {
+    verdict = "not-eligible";
+    title = "Produit exclu du droit de rétractation";
+    summary = `Biens personnalisés ou logiciels descellés : rétractation exclue (art. L221-28). La garantie légale de conformité reste applicable si défaut.`;
+  } else {
+    verdict = "partial";
+    title = "Droit de retour — informations";
+    summary = `Droit légal : <strong>14 jours</strong> pour tout achat <strong>à distance</strong> (remboursement intégral, retour à la charge du client). En magasin : politique commerciale de l'enseigne. Choisissez une option retour et/ou une enseigne pour le détail.`;
+    cards.push({ title: "Rétractation 14 jours — l'essentiel", tag: "green", tagLabel: "Droit légal", body: `
+      <p><strong>Où ça s'applique :</strong> achats en ligne, par téléphone, correspondance ou démarchage — <strong>pas</strong> en magasin physique.</p>
+      <p><strong>Délai :</strong> 14 jours à compter du <strong>lendemain de la livraison</strong> ; prolongé au premier jour ouvrable si fin week-end/férié ; <strong>+12 mois</strong> si le vendeur n'a pas informé le client du droit.</p>
+      <p><strong>Remboursement :</strong> sous 14 jours après notification (produit + livraison standard) ; peut différer jusqu'à récupération du bien. Frais de retour à la charge du client.</p>
+      <p><strong>Exclusions (art. L221-28) :</strong> produits personnalisés, biens périssables, descellés non revendables (hygiène), logiciels/enregistrements descellés.</p>
+      <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F10485" target="_blank" rel="noopener">Service-public.fr — Rétractation</a></p>`});
+  }
+
   // 6 bis. RETOUR / RÉTRACTATION — 14 JOURS (dropdown dédié)
   // Loi : directive 2011/83/UE art. 9-13 → Code conso FR art. L221-18 à L221-28 (achat à distance)
   // Politique Apple : retour de courtoisie 14 jours en Apple Store (gracieuseté, pas une obligation légale)
@@ -935,7 +976,7 @@ function getResult(s) {
 }
 
 // ========== UI ==========
-const state = { product:"", purchase:"", age:"", condition:"", "prior-repair":"", retract:"none", enseigne:"none" };
+const state = { mode:"garantie", product:"", purchase:"", age:"", condition:"", "prior-repair":"", retract:"none", enseigne:"none" };
 
 function toggleExpand(link) {
   const content = link.nextElementSibling;
@@ -949,6 +990,8 @@ function applyScenario(btn, s) {
   btn.classList.add('active');
   // Apply state
   Object.assign(state, s);
+  if (!s.mode) state.mode = "garantie";
+  buildQuestionnaire();
   // Update all dropdowns to reflect the scenario
   QUESTIONS.forEach(q => {
     const sel = document.getElementById(q.id + '-select');
@@ -965,7 +1008,30 @@ function applyScenario(btn, s) {
 function buildQuestionnaire() {
   const container = document.getElementById('questionnaire');
   container.innerHTML = "";
+  // Sélecteur de mode (garantie vs retour)
+  const modeBox = document.createElement('div');
+  modeBox.className = 'select-box mode-box';
+  modeBox.innerHTML = `
+      <label for="mode-select">Type de demande</label>
+      <div class="value" id="mode-value">—</div>
+      <select id="mode-select" aria-label="Type de demande">
+        <option value="garantie">Garantie légale &amp; réparation</option>
+        <option value="retour">Retour 14 jours &amp; rétractation</option>
+      </select>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    `;
+  container.appendChild(modeBox);
+  const modeSel = modeBox.querySelector('select');
+  const modeVal = modeBox.querySelector('.value');
+  modeSel.value = state.mode;
+  modeVal.textContent = state.mode === 'retour' ? 'Retour 14 jours & rétractation' : 'Garantie légale & réparation';
+  modeSel.addEventListener('change', e => {
+    state.mode = e.target.value;
+    buildQuestionnaire();
+    renderResult();
+  });
   QUESTIONS.forEach(q => {
+    if (!q.modes || !q.modes.includes(state.mode)) return;
     const box = document.createElement('div');
     box.className = 'select-box';
     box.innerHTML = `
@@ -990,9 +1056,11 @@ function buildQuestionnaire() {
 
 function renderResult() {
   const panel = document.getElementById('result-panel');
-  const answered = QUESTIONS.filter(q => state[q.id]).length;
-  if (answered < QUESTIONS.length) {
-    panel.innerHTML = `<div class="result-placeholder">Répondez aux ${QUESTIONS.length - answered} question${QUESTIONS.length - answered > 1 ? 's' : ''} restante${QUESTIONS.length - answered > 1 ? 's' : ''}.</div>`;
+  const visible = QUESTIONS.filter(q => q.modes && q.modes.includes(state.mode));
+  const answered = visible.filter(q => state[q.id]).length;
+  const remaining = visible.length - answered;
+  if (answered < visible.length) {
+    panel.innerHTML = `<div class="result-placeholder">Répondez aux ${remaining} question${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}.</div>`;
     return;
   }
   const r = getResult(state);
