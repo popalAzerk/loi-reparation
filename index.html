@@ -203,6 +203,17 @@ const QUESTIONS = [
     ]
   },
   {
+    id: "retract",
+    label: "Retour / rétractation",
+    options: [
+      { value: "none", label: "Non — le client veut faire réparer" },
+      { value: "remote-intact", label: "Achat à distance (en ligne/phone) — scellé, non descellé" },
+      { value: "remote-open", label: "Achat à distance — emballage ouvert/descellé" },
+      { value: "store-return", label: "Achat en Apple Store — retour de courtoisie" },
+      { value: "customized", label: "Produit personnalisé (gravure, config…) ou logiciel descellé" }
+    ]
+  },
+  {
     id: "purchase",
     label: "Lieu d'achat",
     options: [
@@ -767,11 +778,57 @@ function getResult(s) {
     `});
   }
 
+  // 6 bis. RETOUR / RÉTRACTATION — 14 JOURS (dropdown dédié)
+  // Loi : directive 2011/83/UE art. 9-13 → Code conso FR art. L221-18 à L221-28 (achat à distance)
+  // Politique Apple : retour de courtoisie 14 jours en Apple Store (gracieuseté, pas une obligation légale)
+  if (s.retract && s.retract !== "none") {
+    const RETRACT_LAW = `
+      <p><strong>Délai :</strong> 14 jours minimum à compter du <strong>lendemain de la livraison</strong> (ou de la prise de possession). Si le délai expire un samedi, un dimanche ou un jour férié, il est prolongé au premier jour ouvrable. Le professionnel peut offrir plus, jamais moins.</p>
+      <p><strong>Si le client n'a pas été informé</strong> de son droit de rétractation : délai prolongé de <strong>12 mois</strong> (14 jours supplémentaires si l'information arrive entre-temps).</p>
+      <p><strong>Remboursement :</strong> toutes les sommes (produit + livraison standard) dans les <strong>14 jours</strong> suivant la notification ; le vendeur peut différer jusqu'à récupération du bien ou preuve d'expédition. Remboursement sur le mode de paiement d'origine.</p>
+      <p><strong>Frais de retour :</strong> à la charge du client (sauf si le vendeur les prend en charge ou ne les a pas signalés avant l'achat).</p>
+      <p><strong>Exclusions légales (art. L221-28 Code conso) :</strong> biens confectionnés/personnalisés (gravure, config sur mesure), biens périssables, biens descellés après livraison non renvoyables pour raisons d'hygiène, logiciels/enregistrements descellés.</p>
+      <p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F10485" target="_blank" rel="noopener">Service-public.fr — Rétractation</a> · <a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a></p>`;
+    let rTitle, rTag, rTagLabel, rBody;
+    if (s.retract === "remote-intact") {
+      rTitle = "Rétractation acceptée — droit légal (14 jours)";
+      rTag = "green"; rTagLabel = "Droit légal";
+      rBody = `
+        <p><strong>Achat à distance = droit de rétractation obligatoire (directive 2011/83/UE, art. L221-18 Code conso).</strong> Le client peut renvoyer le produit <strong>sans motif</strong> dans les 14 jours suivant la livraison — même s'il a ouvert l'appareil pour l'examiner, tant que l'emballage n'est pas descellé de manière le rendant non revendable pour raisons d'hygiène.</p>
+        <p><strong>Action :</strong> accepter le retour et rembourser intégralement (produit + frais de livraison standard). Le remboursement intervient dans les 14 jours après notification (ou après récupération du bien).</p>
+        ${RETRACT_LAW}`;
+    } else if (s.retract === "remote-open") {
+      rTitle = "Emballage ouvert — à évaluer au cas par cas";
+      rTag = "amber"; rTagLabel = "À évaluer";
+      rBody = `
+        <p>Le droit de rétractation s'applique <strong>même si le client a ouvert l'emballage</strong>, tant qu'il a simplement examiné le produit. La seule limite : si l'ouverture le rend <strong>non revendable</strong> pour raisons d'hygiène ou de santé.</p>
+        <p><strong>Concrètement en Apple Store :</strong> un iPhone/iPad/Mac déballé mais complet (accessoires, câbles, emballage) est en principe <strong>repris et remboursé</strong>. Un produit avec accessoires descellés à usage hygiénique (écouteurs intra-auriculaires AirPods, protections auditives) peut être <strong>refusé au retour</strong> si l'hygiène est compromise.</p>
+        <p><strong>Astuce :</strong> vérifier que toutes les pièces sont présentes ; si un élément manque, un remboursement réduit peut être appliqué (responsabilité de l'utilisateur, art. L221-23).</p>
+        ${RETRACT_LAW}`;
+    } else if (s.retract === "store-return") {
+      rTitle = "Retour de courtoisie Apple — 14 jours (pas une obligation légale)";
+      rTag = "amber"; rTagLabel = "Politique commerciale";
+      rBody = `
+        <p><strong>Attention : en magasin physique, il n'y a PAS de droit de rétractation légal.</strong> Le droit de 14 jours ne s'applique qu'aux achats <strong>à distance</strong> (en ligne, téléphone, démarchage).</p>
+        <p>Mais la <strong>politique de retour Apple Retail France</strong> accepte volontairement le retour <strong>dans les 14 jours calendaires</strong> suivant le retrait, sur présentation du reçu, avec emballage, pièces et accessoires d'origine → échange ou remboursement selon le mode de paiement initial. C'est une <strong>gracieuseté commerciale</strong>, que le magasin peut appliquer.</p>
+        <p><strong>Conditions :</strong> état d'origine, complet, avec facture/reçu. Retours &gt; 1 019 € en espèces : virement bancaire. Remboursement sur le mode de règlement initial. Les produits achetés chez un revendeur (Fnac, Darty…) doivent être retournés <strong>chez ce revendeur</strong>.</p>
+        <p><a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France — Politique de retour</a></p>`;
+    } else if (s.retract === "customized") {
+      rTitle = "Pas de rétractation — produit exclu de la loi";
+      rTag = "red"; rTagLabel = "Exclusion légale";
+      rBody = `
+        <p>Les biens <strong>confectionnés selon les spécifications du client ou nettement personnalisés</strong> (gravure, configuration spécifique commandée), ainsi que les <strong>logiciels/enregistrements descellés</strong>, sont <strong>exclus du droit de rétractation</strong> (art. L221-28 Code conso).</p>
+        <p><strong>Exception :</strong> si le produit est <strong>défectueux ou non conforme</strong>, la <strong>garantie légale de conformité</strong> s'applique normalement (réparation/remplacement, puis remboursement si impossible).</p>
+        ${RETRACT_LAW}`;
+    }
+    cards.push({ title: rTitle, tag: rTag, tagLabel: rTagLabel, body: rBody });
+  }
+
   return { verdict, title, summary, cards };
 }
 
 // ========== UI ==========
-const state = { product:"", purchase:"", age:"", condition:"", "prior-repair":"" };
+const state = { product:"", purchase:"", age:"", condition:"", "prior-repair":"", retract:"none" };
 
 function toggleExpand(link) {
   const content = link.nextElementSibling;
