@@ -800,6 +800,98 @@ function getResult(s) {
     `});
   }
 
+  // 6 ter. CONDITIONS DE RETOUR PAR ENSEIGNE (dropdown dédié)
+  // Sources : CGV officielles des enseignes (vérifiées le 05/09/2026)
+  if (s.enseigne && s.enseigne !== "none") {
+    const RET_BASE = `<p><strong>Rappel légal transverse :</strong> quelle que soit l'enseigne, la <strong>garantie légale de conformité (2 ans, Code conso art. L217-3 et s.)</strong> s'applique toujours au vendeur — même produit soldé, déballé ou en promotion. Un défaut dans les 12 mois est présumé antérieur à la livraison (art. L217-10).</p>`;
+    let eTitle, eTag, eTagLabel, eBody;
+    if (s.enseigne === "apple") {
+      eTitle = "Apple — conditions de retour";
+      eTag = "green"; eTagLabel = "CGV Apple";
+      eBody = `
+        <p><strong>Apple Store physique (France) :</strong> retour/échange dans les <strong>14 jours calendaires</strong> suivant le retrait, sur présentation du reçu, produit dans son état d'origine avec pièces, accessoires et emballages. Remboursement selon le mode de paiement initial ; &gt; 1 019 € en espèces → virement bancaire.</p>
+        <p><strong>Apple Store en ligne :</strong> 14 jours à compter de la prise de possession (droit légal de rétractation). Formulaire type, ligne 0800 046 046 ou contactus.fr@euro.apple.com. Retour du produit + facture + emballage d'origine + accessoires ; remboursement dans les 14 jours après récupération ou preuve d'expédition.</p>
+        <p><strong>Non retournables (sauf défaut) :</strong> téléchargements de logiciels commencés avec renonciation exprès, cartes cadeaux Apple/iTunes, services entièrement exécutés, logiciels sous emballage scellé ouverts.</p>
+        <p><strong>Zeiss Optical Inserts :</strong> retours acceptés 14 jours après réception.</p>
+        <p>Les produits achetés auprès d'un <strong>revendeur</strong> doivent lui être retournés selon ses propres conditions.</p>
+        <p><a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a> · <a href="https://www.apple.com/fr/shop/help/returns_refund" target="_blank" rel="noopener">Retours &amp; remboursement</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "amazon") {
+      eTitle = "Amazon (vendu et expédié par Amazon)";
+      eTag = "green"; eTagLabel = "30 jours";
+      eBody = `
+        <p><strong>Double protection :</strong> droit légal de rétractation <strong>14 jours</strong> (remboursement prix + frais de livraison, retour gratuit pour produits expédiés par Amazon) <strong>+ politique commerciale 30 jours</strong>.</p>
+        <p><strong>De 15 à 30 jours après réception :</strong> Amazon rembourse le <strong>prix du produit</strong>, mais <strong>ni les frais de port</strong> ni les frais de retour. Déduction possible pour <strong>dépréciation</strong> liée à la manipulation (produit non neuf incomplet ou marqué).</p>
+        <p><strong>Remboursement :</strong> sous 14 jours après la demande ; peut être différé jusqu'à réception du produit ou preuve d'expédition.</p>
+        <p><strong>Exclusions (30 jours) :</strong> produits personnalisés (gravure), CD/vinyl/DVD/jeux descellés (sauf défaut), logiciels descellés, cartes cadeaux activées.</p>
+        <p><a href="https://www.amazon.fr/gp/help/customer/display.html?nodeId=GKM69DUUYKQWKWX7" target="_blank" rel="noopener">Politique de retour Amazon 30 jours</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "amazon-mp") {
+      eTitle = "Amazon Marketplace (vendeur tiers)";
+      eTag = "amber"; eTagLabel = "Obligations vendeur";
+      eBody = `
+        <p><strong>Les vendeurs Marketplace sont tenus d'offrir au minimum une politique de retour de 30 jours</strong> (exigence Amazon).</p>
+        <p><strong>Dans les 14 jours :</strong> droit légal de rétractation — remboursement prix + frais de livraison. Frais de retour : à la charge du client, <strong>sauf</strong> mode Fashion, retours Prime &lt; 22,6 kg depuis la France, ou politique plus favorable du vendeur.</p>
+        <p><strong>De 15 à 30 jours :</strong> remboursement du prix du produit (pas les ports). Le vendeur peut déduire les frais d'étiquette prépayée du remboursement.</p>
+        <p><strong>Problème produit</strong> (défectueux, non conforme, abîmé) : garantie légale 2 ans — frais de retour <strong>à la charge du vendeur</strong>.</p>
+        <p><strong>Recours :</strong> garantie A-to-z d'Amazon si le vendeur ne répond pas.</p>
+        <p><a href="https://www.amazon.fr/gp/help/customer/display.html?nodeId=GV38326YW5JX9V9X" target="_blank" rel="noopener">Retours Marketplace</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "fnac-darty") {
+      eTitle = "Fnac / Darty — 15 jours pour changer d'avis";
+      eTag = "green"; eTagLabel = "15 jours";
+      eBody = `
+        <p><strong>Darty (art. 4.1 CGV) :</strong> <strong>15 jours</strong> suivant l'achat en magasin ou la réception (darty.com) pour changer d'avis. Produit dans son état d'origine, emballage + accessoires. Retour <strong>gratuit en magasin</strong>, à vos frais par voie postale.</p>
+        <p><strong>Darty en magasin :</strong> emballage non ouvert → remboursement ; ouvert mais non utilisé → <strong>échange</strong> ; produit utilisé → non repris. Produits techniques : vérification possible en atelier avant remboursement.</p>
+        <p><strong>Non repris par Darty si déballés :</strong> produits hygiéniques (rasoirs, tondeuses, épilateurs, brosses à dents), papiers photo, jeux vidéo/logiciels/contenus téléchargeables déballés.</p>
+        <p><strong>Fnac :</strong> CGV Fnac Direct — rétractation légale 14 jours ; Marketplace Fnac-Darty : délai légal 14 jours, libre au vendeur de prolonger ; renvoi sous 14 jours après réception de l'adresse de retour.</p>
+        <p><strong>Bonus Darty :</strong> remboursement de la différence si trouvé moins cher ailleurs dans les <strong>10 jours</strong> (Carte Cadeau).</p>
+        <p><a href="https://www.darty.com/res3/services/contrat-de-confiance/pdf/conditions-generales-de-vente.pdf" target="_blank" rel="noopener">CGV Darty</a> · <a href="https://www.fnac.com/Help/cgv-fnac" target="_blank" rel="noopener">CGV Fnac.com</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "boulanger") {
+      eTitle = "Boulanger — 15 jours pour changer d'avis";
+      eTag = "green"; eTagLabel = "15 jours";
+      eBody = `
+        <p><strong>Politique « Retour sous 15 jours » :</strong> Boulanger <strong>rembourse ou échange</strong> le produit dans les <strong>15 jours</strong> suivant la réception (achat en ligne) — engagement commercial affiché sur tout le site.</p>
+        <p><strong>Conditions :</strong> produit dans son état et emballage d'origine, complets (accessoires, notice). Retour gratuit en magasin ; étiquette de retour en ligne selon le mode d'achat.</p>
+        <p><strong>Certaines catégories</strong> bénéficient d'un délai prolongé jusqu'à 30 jours (consultation du produit concerné) ; produits déballés non reprendables si hygiène ou descellage (identique aux règles sectorielles).</p>
+        <p><strong>Rétractation légale</strong> (achat à distance) : 14 jours, remboursement complet selon la loi.</p>
+        <p><a href="https://www.boulanger.com/evenement/retourner-produit" target="_blank" rel="noopener">Retour sous 15 jours — Boulanger</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "cdiscount") {
+      eTitle = "Cdiscount — retour 14 jours (+ allongements)";
+      eTag = "amber"; eTagLabel = "14 + bonus";
+      eBody = `
+        <p><strong>Droit légal :</strong> rétractation <strong>14 jours</strong> après livraison (retour à la charge du client ; si étiquette prépayée utilisée, frais déduits du remboursement).</p>
+        <p><strong>Période des fêtes :</strong> tout produit commandé et livré entre le 1ᵉʳ novembre et le 31 décembre peut être retourné <strong>jusqu'au 8 janvier</strong> (expédié par Cdiscount) ou jusqu'à <strong>30 jours</strong> après livraison (Marketplace).</p>
+        <p><strong>Marketplace Cdiscount :</strong> les vendeurs tiers doivent offrir <strong>au moins 30 jours</strong> pour la rétractation pendant la période des fêtes (1ᵉʳ nov → 31 déc) — engagement spécifique du guide acheteur/vendeur.</p>
+        <p><strong>Procédure :</strong> Espace client → Mes commandes → demander le retour → télécharger l'étiquette.</p>
+        <p><a href="https://clients.cdiscount.com/frequentlyaskedquestions.html" target="_blank" rel="noopener">Aide au retour Cdiscount</a></p>
+        ${RET_BASE}`;
+    } else if (s.enseigne === "operateur") {
+      eTitle = "Opérateurs télécom (Orange, SFR, Free, Bouygues)";
+      eTag = "amber"; eTagLabel = "14 jours";
+      eBody = `
+        <p><strong>Rétractation légale 14 jours</strong> — point de départ : <strong>signature du contrat</strong> pour l'abonnement, <strong>réception du mobile/box</strong> pour l'équipement.</p>
+        <p><strong>Orange :</strong> exercer via le service client + formulaire de rétractation obligatoire pour retour matériel ; remboursement sous 14 jours après restitution ou preuve d'expédition ; facturation au prorata de l'usage du forfait.</p>
+        <p><strong>SFR :</strong> 14 jours depuis signature/réception ; si le service a déjà été utilisé, part de forfait au prorata ; refuser le colis à la livraison si non encore reçu.</p>
+        <p><strong>Free :</strong> recommandé avec AR ; remboursement des frais sous 14 jours ; mobile remboursé sous 14 jours après retour du téléphone.</p>
+        <p><strong>Bouygues :</strong> service Suivi de Commande (09 81 66 26 66) ; renvoi colis complet avec cadeaux reçus ; frais de retour à la charge du client ; remboursement ~1 semaine.</p>
+        <p><strong>⚠️ En boutique physique : PAS de rétractation légale</strong> — au mieux annulation à la convenance du responsable (souvent en avoir).</p>
+        ${RET_BASE}`;
+    } else {
+      eTitle = "Autre enseigne / revendeur";
+      eTag = "amber"; eTagLabel = "Règles générales";
+      eBody = `
+        <p><strong>En magasin physique :</strong> <strong>pas de droit de rétractation légal</strong> — le retour dépend de la politique commerciale de l'enseigne (souvent échange ou avoir).</p>
+        <p><strong>À distance (web, téléphone) :</strong> <strong>14 jours minimum obligatoires</strong> (remboursement intégral, retour à la charge du client, prolongation si non-information).</p>
+        <p><strong>Produit défectueux :</strong> la <strong>garantie légale de conformité</strong> (2 ans) s'applique chez TOUS les vendeurs, quelle que soit l'enseigne — c'est le vendeur, pas Apple, qui doit réparer/remplacer/rembourser.</p>
+        <p><strong>Astuce Genius Bar :</strong> orienter le client vers son vendeur d'origine avec sa facture ; Apple n'intervient sous garantie légale que s'il est le vendeur.</p>
+        ${RET_BASE}`;
+    }
+    cards.push({ title: eTitle, tag: eTag, tagLabel: eTagLabel, body: eBody });
+  }
+
   return { verdict, title, summary, cards };
 }
 
@@ -1063,7 +1155,7 @@ function renderResult() {
     panel.innerHTML = `<div class="result-placeholder">Répondez aux ${remaining} question${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}.</div>`;
     return;
   }
-  const r = getResult(state);
+  const r = state.mode === "retour" ? getResultRetour(state) : getResult(state);
   const icons = { "eligible":"✅", "partial":"⚠️", "not-eligible":"❌" };
   const classes = { "eligible":"eligible", "partial":"partial", "not-eligible":"not-eligible" };
 
