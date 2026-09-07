@@ -242,21 +242,52 @@ const QUESTIONS = [
       { value: "ipad", label: "iPad" },
       { value: "mac-portable", label: "Mac (portable)" },
       { value: "mac-fixe", label: "Mac (fixe / tout-en-un)" },
-      { value: "moniteur", label: "Moniteur Apple (Studio Display…)" },
-      { value: "tablette-autre", label: "Tablette (autre marque)" },
-      { value: "telephone-autre", label: "Téléphone (autre marque)" },
-      { value: "autre-hors", label: "Autre appareil (électroménager, TV, console…)" }
+      { value: "moniteur", label: "Moniteur Apple (Studio Display…)" }
     ]
   },
   {
-    id: "bonus-context",
+    id: "bonus-warranty",
     modes: ["bonus"],
-    label: "Situation",
+    label: "Statut de garantie",
     options: [
-      { value: "apple-store", label: "Réparation en Apple Store (Genius Bar)" },
-      { value: "qualirepar", label: "Réparateur indépendant labellisé QualiRépar" },
-      { value: "sous-garantie", label: "Appareil encore sous garantie (légale, constructeur ou AppleCare)" },
-      { value: "soi-meme", label: "Le client veut réparer lui-même (pièce achetée)" }
+      { value: "hors-garantie", label: "Hors garantie (légale, constructeur et AppleCare expirés)" },
+      { value: "garantie-legale", label: "Sous garantie légale de conformité (moins de 2 ans)" },
+      { value: "garantie-constructeur", label: "Sous garantie constructeur ou AppleCare+" }
+    ]
+  },
+  {
+    id: "bonus-repair",
+    modes: ["bonus"],
+    label: "Nature de l'intervention",
+    options: [
+      { value: "ecran", label: "Remplacement d'écran cassé" },
+      { value: "batterie", label: "Remplacement de batterie inamovible" },
+      { value: "casse", label: "Casse empêchant le fonctionnement (châssis, vitre…)" },
+      { value: "panne", label: "Panne fonctionnelle (carte, connectique, composant…)" },
+      { value: "esthetique", label: "Réparation esthétique uniquement (coque, rayure…)" },
+      { value: "logicielle", label: "Panne logicielle / maintenance système" },
+      { value: "consommable", label: "Consommable, accessoire ou batterie amovible" }
+    ]
+  },
+  {
+    id: "bonus-cause",
+    modes: ["bonus"],
+    label: "Contexte de la panne",
+    options: [
+      { value: "normale", label: "Panne ou casse normale d'usage" },
+      { value: "externe", label: "Facteur externe (défaut électrique, installation, environnement)" },
+      { value: "usage", label: "Usage non conforme du client" },
+      { value: "assurance", label: "Dommage couvert par une assurance" }
+    ]
+  },
+  {
+    id: "bonus-quote",
+    modes: ["bonus"],
+    label: "Montant du devis",
+    options: [
+      { value: "lt100", label: "Moins de 100 €" },
+      { value: "e100-149", label: "Entre 100 € et 149 €" },
+      { value: "ge150", label: "150 € et plus" }
     ]
   },
   {
@@ -1201,72 +1232,86 @@ function buildQuestionnaire() {
 }
 
 function getResultBonus(s) {
-  // Bonus Réparation (fonds Réparation, écosystésystem / ADEME) — montants en vigueur 2025
-  // Source : ecosystem.eco (éco-organisme opérateur), label-qualirepar.fr
-  // Apple Store France labellisé QualiRépar depuis juillet 2025 (bonus applicable en Genius Bar)
-  const verdict = "partial";
-  let title = "Bonus réparation — conditions d'application";
-  const summary = `Le <strong>Bonus Réparation</strong> est une réduction <strong>immédiate</strong> déduite de la facture, financée par l'éco-organisme ecosystem, uniquement chez un réparateur <strong>labellisé QualiRépar</strong> et pour un appareil <strong>hors garantie</strong>. Les Apple Store de France sont labellisés depuis juillet 2025.`;
+  // Validation d'éligibilité au Bonus Réparation en Apple Store (labellisé QualiRépar 07/2025)
+  // Règles : ecosystem (fonds Réparation) — hors garantie, panne éligible, appareil conforme
+  const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"], bc = s["bonus-cause"], bq = s["bonus-quote"];
+  const amounts = { "iphone": ["iPhone", "25 €"], "ipad": ["iPad", "25 €"], "mac-portable": ["Mac portable", "50 €"], "mac-fixe": ["Mac fixe / tout-en-un", "50 €"], "moniteur": ["Moniteur", "30 €"] };
+  const thresholds = { "mac-portable": 150, "mac-fixe": 150, "moniteur": 100 };
+  const pLabel = amounts[bp] ? amounts[bp][0] : "l'appareil";
+  const pAmount = amounts[bp] ? amounts[bp][1] : "";
   const cards = [];
 
-  // Montants Apple
-  const amounts = {
-    "iphone": { label: "iPhone", amount: "25 €", cond: "réparation éligible (écran, batterie inamovible, casse empêchant le fonctionnement…)" },
-    "ipad": { label: "iPad", amount: "25 €", cond: "réparation éligible — même grille que les tablettes" },
-    "mac-portable": { label: "Mac portable", amount: "50 €", cond: "seuil de déclenchement : devis ≥ 150 €" },
-    "mac-fixe": { label: "Mac fixe / tout-en-un", amount: "50 €", cond: "seuil de déclenchement : devis ≥ 150 €" },
-    "moniteur": { label: "Moniteur", amount: "30 €", cond: "seuil de déclenchement : devis ≥ 100 €" }
-  };
-
-  const p = s["bonus-product"];
-  const ctx = s["bonus-context"];
-
-  // Carte 1 : le verdict selon la situation
-  if (ctx === "sous-garantie") {
-    cards.push({ title: "Appareil sous garantie — bonus NON applicable", tag: "amber", tagLabel: "Hors bonus", body: `
-      <p>Le Bonus Réparation s'applique <strong>uniquement hors garantie</strong> (légale de conformité, constructeur commerciale, AppleCare+). Un appareil couvert relève de sa garantie : la réparation doit être <strong>gratuite</strong> chez le vendeur ou le constructeur — le bonus n'a pas vocation à s'appliquer.</p>
-      <p><strong>En Genius Bar :</strong> vérifier la couverture avant de parler bonus (statut sur le reçu ou coverage.apple.com). Si hors garantie ET panne éligible, le bonus s'applique automatiquement à la facture.</p>` });
-  } else if (ctx === "soi-meme") {
-    cards.push({ title: "Réparation soi-même — bonus NON applicable", tag: "amber", tagLabel: "Hors bonus", body: `
-      <p>Le bonus est réservé aux réparations effectuées <strong>par un professionnel labellisé QualiRépar</strong>. L'achat d'une pièce pour réparer soi-même n'ouvre aucun droit au bonus.</p>
-      <p><strong>À proposer en alternative :</strong> l'orientation vers un réparateur labellisé proche (recherche sur label-qualirepar.fr), ou l'indice de réparabilité du produit.</p>` });
-  } else if (ctx === "apple-store") {
-    cards.push({ title: "Apple Store = QualiRépar : bonus applicable", tag: "green", tagLabel: "Bonus OK", body: `
-      <p>Les <strong>Apple Store de France sont labellisés QualiRépar</strong> (depuis juillet 2025) : le bonus est <strong>déduit automatiquement de la facture</strong> pour les réparations éligibles d'iPhone et iPad (25 €), de Mac (50 €, devis ≥ 150 €) et des moniteurs (30 €, devis ≥ 100 €), <strong>hors garantie</strong>.</p>
-      <p><strong>Cas typiques en Genius Bar :</strong> écran cassé hors garantie, batterie inamovible hors garantie — bonus déduit sans démarche du client.</p>
-      <p><strong>Conditions transverses :</strong> appareil avec plaque signalétique / IMEI, non couvert par une assurance, panne éligible (pas d'ordre esthétique, pas de défaut d'environnement).</p>
-      <p><a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a></p>` });
-  } else if (ctx === "qualirepar") {
-    cards.push({ title: "Réparateur QualiRépar indépendant — bonus applicable", tag: "green", tagLabel: "Bonus OK", body: `
-      <p>Le réparateur labellisé applique le bonus <strong>immédiatement sur la facture</strong> : iPhone/tablette/téléphone <strong>25 €</strong>, Mac <strong>50 €</strong> (devis ≥ 150 €), moniteur <strong>30 €</strong> (devis ≥ 100 €), selon la grille officielle ecosystem.</p>
-      <p><strong>Vérifications :</strong> appareil hors garantie, panne éligible (pas de remplacement esthétique, pas de consommable, pas de panne logicielle), appareil conforme (pas de contrefaçon).</p>
-      <p><strong>Garantie de la réparation :</strong> 3 mois minimum chez un réparateur QualiRépar (1 an chez WeFix pour la plupart des réparations, 3 mois pour les batteries).</p>
-      <p><a href="https://www.label-qualirepar.fr/particulier/bonusreparation.html" target="_blank" rel="noopener">Montants officiels — label-qualirepar.fr</a></p>` });
+  // ===== BLOCAGE 1 : garantie =====
+  if (bw === "garantie-legale") {
+    return { verdict: "not-eligible", title: "Sous garantie légale de conformité — bonus non applicable",
+      summary: `L'appareil est couvert par la <strong>garantie légale de conformité</strong> (2 ans, art. L217-3 et s.) : la réparation doit être <strong>prise en charge par le vendeur</strong>, gratuitement pour le client. Le Bonus Réparation n'intervient que pour les appareils <strong>hors garantie</strong>.`,
+      cards: [
+        { title: "Que faire en Genius Bar", tag: "blue", tagLabel: "Procédure", body: `
+          <p><strong>Orienter le client vers le vendeur</strong> (Apple si acheté sur apple.com/Apple Store, sinon l'enseigne d'achat) avec sa facture. La présomption de défaut est renforcée les 12 premiers mois (art. L217-10, 24 mois pour les biens neufs à compter du 1er janvier 2026).</p>
+          <p>Si le vendeur refuse ou que le client veut accélérer : la réparation payante hors garantie reste possible, mais <strong>sans bonus</strong> tant que la garantie légale court.</p>
+          ${RETRACT_LAW}` } ] };
+  }
+  if (bw === "garantie-constructeur") {
+    return { verdict: "not-eligible", title: "Sous garantie constructeur / AppleCare+ — prise en charge gratuite",
+      summary: `L'appareil est couvert par la <strong>garantie constructeur ou AppleCare+</strong> : la panne (si couverte) est réparée <strong>gratuitement</strong> par Apple. Le Bonus Réparation ne s'applique qu'aux réparations <strong>payantes hors garantie</strong>.`,
+      cards: [
+        { title: "Que faire en Genius Bar", tag: "blue", tagLabel: "Procédure", body: `
+          <p>Vérifier la couverture (numéro de série → coverage.apple.com ou reçu). Si la panne est couverte : réparation <strong>0 €</strong> pour le client — inutile de parler bonus.</p>
+          <p>Si la panne n'est <strong>pas couverte</strong> (casse hors AppleCare+ Loss/Theft, dégâts non couverts) : la réparation devient payante → <strong>le bonus peut alors s'appliquer</strong> si la panne est éligible. Refaire le questionnaire en « hors garantie » pour l'intervention concernée.</p>` } ] };
   }
 
-  // Carte 2 : le montant selon le produit
-  if (amounts[p]) {
-    const a = amounts[p];
-    cards.push({ title: `Montant pour ${a.label} : ${a.amount}`, tag: "green", tagLabel: "Grille ecosystem", body: `
-      <p><strong>Bonus : ${a.amount}</strong> — ${a.cond}.</p>
-      <p>Déduction <strong>immédiate et visible sur la facture</strong>, uniquement hors garantie et chez un réparateur labellisé (Apple Store ou indépendant QualiRépar).</p>` });
-  } else if (p === "tablette-autre") {
-    cards.push({ title: "Tablette autre marque : 25 €", tag: "green", tagLabel: "Grille ecosystem", body: `
-      <p>Les tablettes (toutes marques) bénéficient de <strong>25 €</strong> de bonus chez un réparateur QualiRépar, hors garantie et pour une panne éligible.</p>` });
-  } else if (p === "telephone-autre") {
-    cards.push({ title: "Téléphone autre marque : 25 €", tag: "green", tagLabel: "Grille ecosystem", body: `
-      <p>Les téléphones portables (toutes marques) bénéficient de <strong>25 €</strong> de bonus. Écrans cassés éligibles depuis le 1er janvier 2024.</p>` });
-  } else if (p === "autre-hors") {
-    cards.push({ title: "Autre appareil — hors périmètre Apple", tag: "amber", tagLabel: "Vérifier la grille", body: `
-      <p>Le Fonds Réparation couvre <strong>261 objets</strong> (électroménager 15-50 €, TV, consoles 20 €, vélos électriques 15-30 €…). Grille complète et montants sur le site officiel.</p>
-      <p><a href="https://www.ecosystem.eco/comprendre/bonus-reparation" target="_blank" rel="noopener">Grille officielle ecosystem</a></p>` });
+  // ===== HORS GARANTIE : vérifier la panne =====
+  if (br === "esthetique" || br === "logicielle" || br === "consommable") {
+    const reasons = {
+      "esthetique": "une réparation <strong>esthétique</strong> ne nuit pas au fonctionnement de l'appareil",
+      "logicielle": "une opération de <strong>maintenance logicielle</strong> (système, réinstallation, défaut logiciel)",
+      "consommable": "le remplacement d'un <strong>consommable, accessoire ou batterie amovible</strong>"
+    };
+    return { verdict: "not-eligible", title: "Intervention non éligible au Bonus Réparation",
+      summary: `Le Fonds Réparation exclut ${reasons[br]} : la grille ecosystem cible les réparations qui <strong>prolongent la vie de l'appareil</strong> face à une panne ou une casse fonctionnelle.`,
+      cards: [
+        { title: "Alternatives pour le client", tag: "blue", tagLabel: "À proposer", body: `
+          <p>Vérifier si l'intervention relève d'une <strong>garantie restante</strong> (légale 2 ans chez le vendeur), d'une <strong>assurance</strong> habitation ou d'une extension constructeur.</p>
+          <p>À défaut : la réparation reste possible aux frais du client, chez Apple ou un réparateur indépendant — simplement <strong>sans réduction bonus</strong>.</p>` } ] };
   }
 
-  // Carte commune : pannes éligibles / non éligibles
-  cards.push({ title: "Pannes éligibles et non éligibles", tag: null, tagLabel: "", body: `
-    <p><strong>Éligibles :</strong> écrans cassés (dont téléphones depuis 2024, TV et écrans d'ordinateur), casses empêchant le fonctionnement (hublot, poignée, vitre), remplacement des batteries <strong>inamovibles</strong>.</p>
-    <p><strong>Non éligibles :</strong> dommages esthétiques ou n'empêchant pas le fonctionnement, remplacement de consommables/accessoires/batteries <strong>amovibles</strong>, pannes liées à l'environnement (défaut électrique, installation), opérations de maintenance <strong>logicielle</strong>, dommages relevant des garanties légales ou de vices cachés.</p>
-    <p><strong>Toujours :</strong> déduction immédiate sur la facture, appareil hors garantie, réparateur labellisé.</p>` });
+  if (bc === "assurance") {
+    return { verdict: "not-eligible", title: "Dommage couvert par une assurance — bonus exclu",
+      summary: `Les appareils couverts par une <strong>assurance</strong> (habitation, multidémie, extension) sont exclus du Bonus Réparation : le dommage doit d'abord être déclaré à l'assureur, qui prend en charge selon le contrat.`,
+      cards: [
+        { title: "Procédure", tag: "blue", tagLabel: "Procédure", body: `
+          <p>Conseiller au client de <strong>déclarer le sinistre</strong> à son assureur avant toute réparation payante (franchise souvent plus basse que le coût de réparation).</p>
+          <p>Si l'assurance <strong>refuse</strong> la prise en charge (exclusion, franchise élevée) : la réparation redevient « normale » → le bonus peut s'appliquer si la panne est éligible.</p>` } ] };
+  }
+
+  // ===== PANNE ÉLIGIBLE : calculer le montant =====
+  const isEligiblePanne = ["ecran", "batterie", "casse", "panne"].includes(br);
+  const thr = thresholds[bp];
+  const quote = bq === "lt100" ? 90 : bq === "e100-149" ? 120 : 200;
+  const quoteOk = thr ? quote >= thr : true;
+  const passed = isEligiblePanne && bc !== "externe" && bc !== "usage";
+  const verdict = passed ? (quoteOk ? "eligible" : "partial") : "not-eligible";
+  const title = passed
+    ? (quoteOk ? `Bonus réparation applicable — ${pAmount} pour ${pLabel}` : `Bonus ${pAmount} — seuil de devis non atteint`)
+    : "Contexte de panne incompatible avec le bonus";
+  const summary = passed
+    ? (quoteOk
+      ? `<strong>${pLabel} hors garantie</strong> + intervention éligible + contexte normal : le bonus de <strong>${pAmount}</strong> est <strong>déduit automatiquement de la facture</strong> en Apple Store (labellisé QualiRépar).`
+      : `Le montant du devis est <strong>inférieur au seuil de déclenchement</strong> (${thr} € pour ${pLabel}) : le bonus de ${pAmount} ne s'applique pas sur ce devis — il s'appliquerait si le devis atteint ${thr} €.`)
+    : `Un dommage causé par un <strong>facteur externe</strong> (défaut électrique, installation, environnement) ou un <strong>usage non conforme</strong> du client n'ouvre pas droit au bonus.`;
+
+  cards.push({ title: `Récapitulatif — ${pLabel} (${pAmount})`, tag: verdict === "eligible" ? "green" : verdict === "partial" ? "amber" : "red", tagLabel: verdict === "eligible" ? "Bonus OK" : verdict === "partial" ? "Seuil" : "Refusé", body: `
+    <p><strong>Produit :</strong> ${pLabel} — bonus de référence ${pAmount}.</p>
+    <p><strong>Statut :</strong> hors garantie (légale et constructeur) ✓</p>
+    <p><strong>Intervention :</strong> ${ { "ecran": "remplacement d'écran (éligible depuis 2024 pour les téléphones, désormais TV et écrans)", "batterie": "batterie inamovible (éligible)", "casse": "casse empêchant le fonctionnement (éligible)", "panne": "panne fonctionnelle (éligible)" }[br] || "" }</p>
+    <p><strong>Contexte :</strong> ${ bc === "normale" ? "panne normale d'usage ✓" : "facteur externe ou usage non conforme → excluant" }.</p>
+    ${ thr ? `<p><strong>Seuil de devis :</strong> ${thr} € minimum → devis ${quote} € (estimation) → ${quoteOk ? "seuil atteint ✓" : "seuil non atteint ✗"}.</p>` : "" }
+    <p><strong>Résultat :</strong> ${ passed ? (quoteOk ? `bonus de <strong>${pAmount}</strong> déduit immédiatement de la facture Apple Store.` : `pas de bonus sur ce devis (montant < ${thr} €).`) : "bonus non applicable." }</p>` });
+
+  cards.push({ title: "Application en Apple Store", tag: "green", tagLabel: "QualiRépar", body: `
+    <p>Les Apple Store de France sont <strong>labellisés QualiRépar depuis juillet 2025</strong> : le bonus est appliqué <strong>automatiquement</strong> à la facture, sans démarche du client, pour les réparations éligibles <strong>hors garantie</strong>.</p>
+    <p><strong>Garantie de la réparation :</strong> 3 mois minimum chez un réparateur QualiRépar (90 jours chez Apple sur les réparations payantes).</p>
+    <p><a href="https://www.ecosystem.eco/comprendre/bonus-reparation" target="_blank" rel="noopener">Grille officielle ecosystem</a> · <a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a></p>` });
 
   return { verdict, title, summary, cards };
 }
@@ -1277,8 +1322,10 @@ function renderResult() {
   if (state.mode === "bonus") {
     const bp = state["bonus-product"];
     const bc = state["bonus-context"];
-    if (!bp || !bc) {
-      panel.innerHTML = `<div class="result-placeholder">Choisissez le <strong>produit à réparer</strong> et la <strong>situation</strong> pour afficher le montant du bonus et son application.</div>`;
+    const bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"], bqs = state["bonus-quote"];
+    if (!bp || !bws || !brs || !bcs || !bqs) {
+      const answered = [bp, bws, brs, bcs, bqs].filter(Boolean).length;
+      panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${5 - answered} question${5 - answered > 1 ? 's' : ''} restante${5 - answered > 1 ? 's' : ''} pour valider le bonus.</div>`;
       return;
     }
     showResult(panel2, getResultBonus(state));
