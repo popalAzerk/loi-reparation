@@ -289,16 +289,7 @@ const QUESTIONS = [
       { value: "assurance", label: "Dommage couvert par une assurance" }
     ]
   },
-  {
-    id: "bonus-quote",
-    modes: ["bonus"],
-    label: "Montant du devis",
-    options: [
-      { value: "lt100", label: "Moins de 100 €" },
-      { value: "e100-149", label: "Entre 100 € et 149 €" },
-      { value: "ge150", label: "150 € et plus" }
-    ]
-  },
+
   {
     id: "purchase",
     modes: ["garantie"],
@@ -1244,7 +1235,7 @@ function getResultBonus(s) {
   // Validation d'éligibilité au Bonus Réparation en Apple Store (labellisé QualiRépar 07/2025)
   // Règles : ecosystem (fonds Réparation) — PARTICULIERS uniquement, hors garantie, panne éligible
   const bs = s["bonus-status"];
-  const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"], bc = s["bonus-cause"], bq = s["bonus-quote"];
+  const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"], bc = s["bonus-cause"];
 
   // ===== BLOCAGE 0 : professionnel =====
   if (bs === "professionnel") {
@@ -1309,19 +1300,13 @@ function getResultBonus(s) {
   }
 
   // ===== PANNE ÉLIGIBLE : calculer le montant =====
+  // Seuils officiels (Mac ≥ 150 €, moniteur ≥ 100 €) : systématiquement atteints en Apple Store → non posés
   const isEligiblePanne = ["ecran", "batterie", "casse", "panne"].includes(br);
-  const thr = thresholds[bp];
-  const quote = bq === "lt100" ? 90 : bq === "e100-149" ? 120 : 200;
-  const quoteOk = thr ? quote >= thr : true;
   const passed = isEligiblePanne && bc !== "externe" && bc !== "usage";
-  const verdict = passed ? (quoteOk ? "eligible" : "partial") : "not-eligible";
-  const title = passed
-    ? (quoteOk ? `Bonus réparation applicable — ${pAmount} pour ${pLabel}` : `Bonus ${pAmount} — seuil de devis non atteint`)
-    : "Contexte de panne incompatible avec le bonus";
+  const verdict = passed ? "eligible" : "not-eligible";
+  const title = passed ? `Bonus réparation applicable — ${pAmount} pour ${pLabel}` : "Contexte de panne incompatible avec le bonus";
   const summary = passed
-    ? (quoteOk
-      ? `<strong>${pLabel} hors garantie</strong> + intervention éligible + contexte normal : le bonus de <strong>${pAmount}</strong> est <strong>déduit automatiquement de la facture</strong> en Apple Store (labellisé QualiRépar).`
-      : `Le montant du devis est <strong>inférieur au seuil de déclenchement</strong> (${thr} € pour ${pLabel}) : le bonus de ${pAmount} ne s'applique pas sur ce devis — il s'appliquerait si le devis atteint ${thr} €.`)
+    ? `<strong>${pLabel} hors garantie</strong> + intervention éligible + contexte normal : le bonus de <strong>${pAmount}</strong> est <strong>déduit automatiquement de la facture</strong> en Apple Store (labellisé QualiRépar).`
     : `Un dommage causé par un <strong>facteur externe</strong> (défaut électrique, installation, environnement) ou un <strong>usage non conforme</strong> du client n'ouvre pas droit au bonus.`;
 
   cards.push({ title: `Récapitulatif — ${pLabel} (${pAmount})`, tag: verdict === "eligible" ? "green" : verdict === "partial" ? "amber" : "red", tagLabel: verdict === "eligible" ? "Bonus OK" : verdict === "partial" ? "Seuil" : "Refusé", body: `
@@ -1330,8 +1315,8 @@ function getResultBonus(s) {
     <p><strong>Statut :</strong> hors garantie (légale et constructeur) ✓</p>
     <p><strong>Intervention :</strong> ${ { "ecran": "remplacement d'écran (éligible depuis 2024 pour les téléphones, désormais TV et écrans)", "batterie": "batterie inamovible (éligible)", "casse": "casse empêchant le fonctionnement (éligible)", "panne": "panne fonctionnelle (éligible)" }[br] || "" }</p>
     <p><strong>Contexte :</strong> ${ bc === "normale" ? "panne normale d'usage ✓" : "facteur externe ou usage non conforme → excluant" }.</p>
-    ${ thr ? `<p><strong>Seuil de devis :</strong> ${thr} € minimum → devis ${quote} € (estimation) → ${quoteOk ? "seuil atteint ✓" : "seuil non atteint ✗"}.</p>` : "" }
-    <p><strong>Résultat :</strong> ${ passed ? (quoteOk ? `bonus de <strong>${pAmount}</strong> déduit immédiatement de la facture Apple Store.` : `pas de bonus sur ce devis (montant < ${thr} €).`) : "bonus non applicable." }</p>` });
+    <p><strong>Résultat :</strong> ${ passed ? `bonus de <strong>${pAmount}</strong> déduit immédiatement de la facture Apple Store.` : "bonus non applicable." }</p>
+    ${ thresholds[bp] ? `<p><em>Seuil officiel de déclenchement : ${thresholds[bp]} € (${pLabel}) — systématiquement dépassé en Apple Store.</em></p>` : "" }` });
 
   cards.push({ title: "Application en Apple Store", tag: "green", tagLabel: "QualiRépar", body: `
     <p>Les Apple Store de France sont <strong>labellisés QualiRépar depuis juillet 2025</strong> : le bonus est appliqué <strong>automatiquement</strong> à la facture, sans démarche du client, pour les réparations éligibles <strong>hors garantie</strong>.</p>
@@ -1347,10 +1332,10 @@ function renderResult() {
   if (state.mode === "bonus") {
     const bp = state["bonus-product"];
     const bc = state["bonus-context"];
-    const bss = state["bonus-status"], bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"], bqs = state["bonus-quote"];
-    const bAns = [bss, bp, bws, brs, bcs, bqs].filter(Boolean).length;
-    if (bAns < 6) {
-      panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${6 - bAns} question${6 - bAns > 1 ? 's' : ''} restante${6 - bAns > 1 ? 's' : ''} pour valider le bonus.</div>`;
+    const bss = state["bonus-status"], bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"];
+    const bAns = [bss, bp, bws, brs, bcs].filter(Boolean).length;
+    if (bAns < 5) {
+      panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${5 - bAns} question${5 - bAns > 1 ? 's' : ''} restante${5 - bAns > 1 ? 's' : ''} pour valider le bonus.</div>`;
       return;
     }
     showResult(panel2, getResultBonus(state));
