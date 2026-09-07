@@ -272,7 +272,8 @@ const QUESTIONS = [
       { value: "ecran", label: "Remplacement d'écran cassé" },
       { value: "batterie", label: "Remplacement de batterie inamovible" },
       { value: "casse", label: "Casse empêchant le fonctionnement (châssis, vitre…)" },
-      { value: "panne", label: "Panne fonctionnelle (carte, connectique, composant…)" },
+      { value: "panne", label: "Panne fonctionnelle (carte mère, composant interne…)" },
+      { value: "connectique", label: "Connectique (port USB, entrée, chargeur…)" },
       { value: "esthetique", label: "Réparation esthétique uniquement (coque, rayure…)" },
       { value: "logicielle", label: "Panne logicielle / maintenance système" },
       { value: "consommable", label: "Consommable, accessoire ou batterie amovible" }
@@ -1235,12 +1236,13 @@ function getResultBonus(s) {
   // Validation d'éligibilité au Bonus Réparation en Apple Store (labellisé QualiRépar 07/2025)
   // Règles : ecosystem (fonds Réparation) — PARTICULIERS uniquement, hors garantie, panne éligible
   const bs = s["bonus-status"];
-  const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"], bc = s["bonus-cause"];
+  const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"];
+  let bc = s["bonus-cause"];
 
   // ===== BLOCAGE 0 : professionnel =====
   if (bs === "professionnel") {
     return { verdict: "not-eligible", title: "Client professionnel — bonus non applicable",
-      summary: `Le <strong>Bonus Réparation est réservé aux particuliers</strong> : il ne s'applique pas aux équipements d'une entreprise (SARL, EURL, micro-entreprise, société…), y compris pour un MacBook ou un iPhone professionnel. Sources : ADEME (quefairedemesdechets.ademe.fr) et ecologie.gouv.fr.`,
+      summary: `Le <strong>Bonus Réparation est réservé aux particuliers</strong> : le critère officiel du fonds est l'appareil « <strong>détenu par un ménage</strong> » — les équipements d'une entreprise (SARL, EURL, micro-entreprise, société…) ou d'une organisation sont exclus. Exemples officiels de refus : sèche-linge d'un <strong>salon de coiffure</strong>, cafetière d'un <strong>club sportif</strong>. Sources : PDF ecosystem doc/257, ADEME, ecologie.gouv.fr.`,
       cards: [
         { title: "Que faire pour un appareil professionnel", tag: "blue", tagLabel: "Alternatives", body: `
           <p><strong>Réparation payante classique</strong> en Apple Store ou chez un prestataire agréé — facturée à l'entreprise, souvent récupérable en charges (TVA déductible sur le devis).</p>
@@ -1290,6 +1292,9 @@ function getResultBonus(s) {
           <p>À défaut : la réparation reste possible aux frais du client, chez Apple ou un réparateur indépendant — simplement <strong>sans réduction bonus</strong>.</p>` } ] };
   }
 
+  // Connectique = "entrée connectique" = facteur externe (PDF ecosystem doc/257)
+  if (br === "connectique" && bc !== "assurance") bc = "externe";
+
   if (bc === "assurance") {
     return { verdict: "not-eligible", title: "Dommage couvert par une assurance — bonus exclu",
       summary: `Les appareils couverts par une <strong>assurance</strong> (habitation, multidémie, extension) sont exclus du Bonus Réparation : le dommage doit d'abord être déclaré à l'assureur, qui prend en charge selon le contrat.`,
@@ -1307,7 +1312,7 @@ function getResultBonus(s) {
   const title = passed ? `Bonus réparation applicable — ${pAmount} pour ${pLabel}` : "Contexte de panne incompatible avec le bonus";
   const summary = passed
     ? `<strong>${pLabel} hors garantie</strong> + intervention éligible + contexte normal : le bonus de <strong>${pAmount}</strong> est <strong>déduit automatiquement de la facture</strong> en Apple Store (labellisé QualiRépar).`
-    : `Un dommage causé par un <strong>facteur externe</strong> (défaut électrique, installation, environnement) ou un <strong>usage non conforme</strong> du client n'ouvre pas droit au bonus.`;
+    : `Un dommage causé par un <strong>facteur externe</strong> (défaut électrique, installation, <strong>oxydation/immersion</strong>, connectique, mauvais entretien) ou un <strong>usage non conforme</strong> du client n'ouvre pas droit au bonus.`;
 
   cards.push({ title: `Récapitulatif — ${pLabel} (${pAmount})`, tag: verdict === "eligible" ? "green" : verdict === "partial" ? "amber" : "red", tagLabel: verdict === "eligible" ? "Bonus OK" : verdict === "partial" ? "Seuil" : "Refusé", body: `
     <p><strong>Client :</strong> particulier ✓ (le bonus est réservé aux particuliers — les équipements d'entreprise sont exclus).</p>
@@ -1317,6 +1322,12 @@ function getResultBonus(s) {
     <p><strong>Contexte :</strong> ${ bc === "normale" ? "panne normale d'usage ✓" : "facteur externe ou usage non conforme → excluant" }.</p>
     <p><strong>Résultat :</strong> ${ passed ? `bonus de <strong>${pAmount}</strong> déduit immédiatement de la facture Apple Store.` : "bonus non applicable." }</p>
     ${ thresholds[bp] ? `<p><em>Seuil officiel de déclenchement : ${thresholds[bp]} € (${pLabel}) — systématiquement dépassé en Apple Store.</em></p>` : "" }` });
+
+  cards.push({ title: "Grille officielle d'éligibilité (exemples ecosystem)", tag: null, tagLabel: "PDF doc/257", body: `
+    <p><strong>✅ Acceptées (exemples officiels) :</strong> écran cassé de téléphone/ordinateur, dalle TV cassée, <strong>batterie soudée ou collée</strong> à l'appareil (téléphone, ordinateur — le cas iPhone/Mac), poignée de hublot, joint de lave-linge fuyard, <strong>ventilateur d'un ordinateur portable</strong> ou d'une console, clayette de réfrigérateur, enrouleur d'aspirateur.</p>
+    <p><strong>❌ Refusées (exemples officiels) :</strong> dommage esthétique ou n'empêchant pas le fonctionnement (<strong>face arrière fissurée d'un téléphone</strong>, revêtement griffé, impact sur porte), batterie <strong>amovible</strong> (VAE, outillage), chargeur/câble amovible, cartouche, ampoule/LED (y compris barre de LED de TV), objectif photo, vente de pièce seule sans acte de réparation, mises à jour et logiciels, <strong>port USB HS (entrée connectique)</strong>, <strong>oxydation / immersion</strong>, pièce coincée / circuit encrassé (mauvais entretien), défaut de montage, appareil acheté à l'étranger ou marque non distribuée en France, rappel de parc constructeur.</p>
+    <p><strong>Conditions produit :</strong> plaque signalétique ou IMEI lisible (plaque effacée / marquée « HS » → refus), appareil détenu par un <strong>ménage</strong>, non couvert par une assurance, conforme à la réglementation.</p>
+    <p><a href="https://www.ecosystem.eco/document/257" target="_blank" rel="noopener">PDF officiel — appareil et panne éligibles (exemples)</a> · <a href="https://www.ecosystem.eco/document/56" target="_blank" rel="noopener">Grille des montants (PDF)</a></p>` });
 
   cards.push({ title: "Application en Apple Store", tag: "green", tagLabel: "QualiRépar", body: `
     <p>Les Apple Store de France sont <strong>labellisés QualiRépar depuis juillet 2025</strong> : le bonus est appliqué <strong>automatiquement</strong> à la facture, sans démarche du client, pour les réparations éligibles <strong>hors garantie</strong>.</p>
