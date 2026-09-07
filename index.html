@@ -274,9 +274,10 @@ const QUESTIONS = [
       { value: "casse", label: "Casse empêchant le fonctionnement (châssis, vitre…)" },
       { value: "panne", label: "Panne fonctionnelle (carte mère, composant interne…)" },
       { value: "connectique", label: "Connectique (port USB, entrée, chargeur…)" },
+      { value: "verre-arriere", label: "Dommage sur le verre arrière (face arrière fissurée)" },
       { value: "esthetique", label: "Réparation esthétique uniquement (coque, rayure…)" },
       { value: "logicielle", label: "Panne logicielle / maintenance système" },
-      { value: "consommable", label: "Consommable, accessoire ou batterie amovible" }
+      { value: "consommable", label: "Consommable ou accessoire (cartouche, chargeur, câble…)" }
     ]
   },
   {
@@ -1278,11 +1279,12 @@ function getResultBonus(s) {
   }
 
   // ===== HORS GARANTIE : vérifier la panne =====
-  if (br === "esthetique" || br === "logicielle" || br === "consommable") {
+  if (br === "esthetique" || br === "logicielle" || br === "consommable" || br === "verre-arriere") {
     const reasons = {
+      "verre-arriere": "le <strong>verre arrière fissuré</strong> n'empêche pas le fonctionnement de l'appareil — le PDF officiel ecosystem le classe explicitement en dommage « esthétique / non fonctionnel » (à distinguer de l'<strong>écran</strong> cassé, lui éligible)",
       "esthetique": "une réparation <strong>esthétique</strong> ne nuit pas au fonctionnement de l'appareil",
       "logicielle": "une opération de <strong>maintenance logicielle</strong> (système, réinstallation, défaut logiciel)",
-      "consommable": "le remplacement d'un <strong>consommable, accessoire ou batterie amovible</strong>"
+      "consommable": "le remplacement d'un <strong>consommable ou accessoire</strong> (cartouche, chargeur, câble, batterie amovible)"
     };
     return { verdict: "not-eligible", title: "Intervention non éligible au Bonus Réparation",
       summary: `Le Fonds Réparation exclut ${reasons[br]} : la grille ecosystem cible les réparations qui <strong>prolongent la vie de l'appareil</strong> face à une panne ou une casse fonctionnelle.`,
@@ -1325,7 +1327,7 @@ function getResultBonus(s) {
 
   cards.push({ title: "Grille officielle d'éligibilité (exemples ecosystem)", tag: null, tagLabel: "PDF doc/257", body: `
     <p><strong>✅ Acceptées (exemples officiels) :</strong> écran cassé de téléphone/ordinateur, dalle TV cassée, <strong>batterie soudée ou collée</strong> à l'appareil (téléphone, ordinateur — le cas iPhone/Mac), poignée de hublot, joint de lave-linge fuyard, <strong>ventilateur d'un ordinateur portable</strong> ou d'une console, clayette de réfrigérateur, enrouleur d'aspirateur.</p>
-    <p><strong>❌ Refusées (exemples officiels) :</strong> dommage esthétique ou n'empêchant pas le fonctionnement (<strong>face arrière fissurée d'un téléphone</strong>, revêtement griffé, impact sur porte), batterie <strong>amovible</strong> (VAE, outillage), chargeur/câble amovible, cartouche, ampoule/LED (y compris barre de LED de TV), objectif photo, vente de pièce seule sans acte de réparation, mises à jour et logiciels, <strong>port USB HS (entrée connectique)</strong>, <strong>oxydation / immersion</strong>, pièce coincée / circuit encrassé (mauvais entretien), défaut de montage, appareil acheté à l'étranger ou marque non distribuée en France, rappel de parc constructeur.</p>
+    <p><strong>❌ Refusées (exemples officiels) :</strong> dommage esthétique ou n'empêchant pas le fonctionnement (<strong>verre arrière / face arrière fissurée d'un téléphone</strong> — contrairement à l'<strong>écran</strong> cassé qui est éligible, revêtement griffé, impact sur porte), batterie <strong>amovible</strong> (VAE, outillage), chargeur/câble amovible, cartouche, ampoule/LED (y compris barre de LED de TV), objectif photo, vente de pièce seule sans acte de réparation, mises à jour et logiciels, <strong>port USB HS (entrée connectique)</strong>, <strong>oxydation / immersion</strong>, pièce coincée / circuit encrassé (mauvais entretien), défaut de montage, appareil acheté à l'étranger ou marque non distribuée en France, rappel de parc constructeur.</p>
     <p><strong>Conditions produit :</strong> plaque signalétique ou IMEI lisible (plaque effacée / marquée « HS » → refus), appareil détenu par un <strong>ménage</strong>, non couvert par une assurance, conforme à la réglementation.</p>
     <p><a href="https://www.ecosystem.eco/document/257" target="_blank" rel="noopener">PDF officiel — appareil et panne éligibles (exemples)</a> · <a href="https://www.ecosystem.eco/document/56" target="_blank" rel="noopener">Grille des montants (PDF)</a></p>` });
 
