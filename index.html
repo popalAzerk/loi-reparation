@@ -1333,6 +1333,11 @@ function renderResult() {
     const bp = state["bonus-product"];
     const bc = state["bonus-context"];
     const bss = state["bonus-status"], bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"];
+    // Refus IMMÉDIAT si statut professionnel (bloquant avant toutes les autres questions)
+    if (bss === "professionnel") {
+      showResult(panel2, getResultBonus(state));
+      return;
+    }
     const bAns = [bss, bp, bws, brs, bcs].filter(Boolean).length;
     if (bAns < 5) {
       panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${5 - bAns} question${5 - bAns > 1 ? 's' : ''} restante${5 - bAns > 1 ? 's' : ''} pour valider le bonus.</div>`;
