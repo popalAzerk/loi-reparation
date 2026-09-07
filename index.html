@@ -274,7 +274,7 @@ const QUESTIONS = [
       { value: "casse", label: "Casse empêchant le fonctionnement (châssis, vitre…)" },
       { value: "panne", label: "Panne fonctionnelle (carte mère, composant interne…)" },
       { value: "connectique", label: "Connectique (port USB, entrée, chargeur…)" },
-      { value: "verre-arriere", label: "Dommage sur le verre arrière (fissuré / brisé avec lentille photo ou MagSafe)" },
+      { value: "verre-arriere", label: "Dommage sur le verre arrière" },
       { value: "esthetique", label: "Réparation esthétique uniquement (coque, rayure…)" },
       { value: "logicielle", label: "Panne logicielle / maintenance système" },
       { value: "consommable", label: "Consommable ou accessoire (cartouche, chargeur, câble…)" }
@@ -286,8 +286,6 @@ const QUESTIONS = [
     label: "Contexte de la panne",
     options: [
       { value: "normale", label: "Panne ou casse normale d'usage" },
-      { value: "lentille", label: "Verre arrière brisé atteignant la lentille de l'appareil photo" },
-      { value: "magsafe", label: "Verre arrière brisé atteignant le module MagSafe" },
       { value: "externe", label: "Facteur externe (défaut électrique, installation, environnement)" },
       { value: "usage", label: "Usage non conforme du client" },
       { value: "assurance", label: "Dommage couvert par une assurance" }
@@ -1282,15 +1280,10 @@ function getResultBonus(s) {
   }
 
   // ===== HORS GARANTIE : vérifier la panne =====
-  // Verre arrière : le tri se fait via le CONTEXTE
-  // - fissure seule (contexte normale) → refus esthétique
-  // - brisé AVEC lentille photo ou MagSafe → éligible : le module (photo/MagSafe) est touché,
-  //   la réparation porte sur un composant fonctionnel, Apple la prend en charge
-  const verreMagSafe = br === "verre-arriere" && (bc === "lentille" || bc === "magsafe");
-  if (verreMagSafe) br = "panne"; // traité comme panne fonctionnelle
-  if (br === "esthetique" || br === "logicielle" || br === "consommable" || br === "verre-arriere") {
+  // Verre arrière endommagé : ÉLIGIBLE direct (25 €) — le module lentille photo / MagSafe
+  // qu'il contient est fonctionnel, Apple prend la réparation en charge
+  if (br === "esthetique" || br === "logicielle" || br === "consommable") {
     const reasons = {
-      "verre-arriere": "le <strong>verre arrière fissuré</strong> n'empêche pas le fonctionnement de l'appareil — le PDF officiel ecosystem le classe explicitement en dommage « esthétique / non fonctionnel » (à distinguer de l'<strong>écran</strong> cassé, lui éligible). <strong>Exception :</strong> si le verre arrière est <strong>brisé en touchant la lentille de l'appareil photo</strong> ou le <strong>module MagSafe</strong> qu'il contient, Apple prend en charge la réparation — sélectionner ce cas dans le contexte de la panne.",
       "esthetique": "une réparation <strong>esthétique</strong> ne nuit pas au fonctionnement de l'appareil",
       "logicielle": "une opération de <strong>maintenance logicielle</strong> (système, réinstallation, défaut logiciel)",
       "consommable": "le remplacement d'un <strong>consommable ou accessoire</strong> (cartouche, chargeur, câble, batterie amovible)"
@@ -1317,7 +1310,7 @@ function getResultBonus(s) {
 
   // ===== PANNE ÉLIGIBLE : calculer le montant =====
   // Seuils officiels (Mac ≥ 150 €, moniteur ≥ 100 €) : systématiquement atteints en Apple Store → non posés
-  const isEligiblePanne = ["ecran", "batterie", "casse", "panne"].includes(br);
+  const isEligiblePanne = ["ecran", "batterie", "casse", "panne", "verre-arriere"].includes(br);
   const passed = isEligiblePanne && bc !== "externe" && bc !== "usage";
   const verdict = passed ? "eligible" : "not-eligible";
   const title = passed ? `Bonus réparation applicable — ${pAmount} pour ${pLabel}` : "Contexte de panne incompatible avec le bonus";
@@ -1329,14 +1322,14 @@ function getResultBonus(s) {
     <p><strong>Client :</strong> particulier ✓ (le bonus est réservé aux particuliers — les équipements d'entreprise sont exclus).</p>
     <p><strong>Produit :</strong> ${pLabel} — bonus de référence ${pAmount}.</p>
     <p><strong>Statut :</strong> hors garantie (légale et constructeur) ✓</p>
-    <p><strong>Intervention :</strong> ${ { "ecran": "remplacement d'écran (éligible depuis 2024 pour les téléphones, désormais TV et écrans)", "batterie": "batterie inamovible (éligible)", "casse": "casse empêchant le fonctionnement (éligible)", "panne": bc === "lentille" || bc === "magsafe" ? "verre arrière brisé avec lentille photo / module MagSafe touché (composant fonctionnel — Apple le prend en charge)" : "panne fonctionnelle (éligible)" }[br] || "" }</p>
+    <p><strong>Intervention :</strong> ${ { "ecran": "remplacement d'écran (éligible depuis 2024 pour les téléphones, désormais TV et écrans)", "batterie": "batterie inamovible (éligible)", "casse": "casse empêchant le fonctionnement (éligible)", "panne": "panne fonctionnelle (éligible)", "verre-arriere": "verre arrière endommagé — module lentille photo / MagSafe touché, composant fonctionnel : Apple le prend en charge" }[br] || "" }</p>
     <p><strong>Contexte :</strong> ${ bc === "normale" ? "panne normale d'usage ✓" : "facteur externe ou usage non conforme → excluant" }.</p>
     <p><strong>Résultat :</strong> ${ passed ? `bonus de <strong>${pAmount}</strong> déduit immédiatement de la facture Apple Store.` : "bonus non applicable." }</p>
     ${ thresholds[bp] ? `<p><em>Seuil officiel de déclenchement : ${thresholds[bp]} € (${pLabel}) — systématiquement dépassé en Apple Store.</em></p>` : "" }` });
 
   cards.push({ title: "Grille officielle d'éligibilité (exemples ecosystem)", tag: null, tagLabel: "PDF doc/257", body: `
     <p><strong>✅ Acceptées (exemples officiels) :</strong> écran cassé de téléphone/ordinateur, dalle TV cassée, <strong>batterie soudée ou collée</strong> à l'appareil (téléphone, ordinateur — le cas iPhone/Mac), poignée de hublot, joint de lave-linge fuyard, <strong>ventilateur d'un ordinateur portable</strong> ou d'une console, clayette de réfrigérateur, enrouleur d'aspirateur.</p>
-    <p><strong>❌ Refusées (exemples officiels) :</strong> dommage esthétique ou n'empêchant pas le fonctionnement (<strong>verre arrière fissuré seul</strong> — contrairement à l'<strong>écran</strong> cassé qui est éligible ; mais si le verre arrière est <strong>brisé en touchant la lentille photo ou le module MagSafe</strong>, Apple prend la réparation en charge, revêtement griffé, impact sur porte), batterie <strong>amovible</strong> (VAE, outillage), chargeur/câble amovible, cartouche, ampoule/LED (y compris barre de LED de TV), objectif photo, vente de pièce seule sans acte de réparation, mises à jour et logiciels, <strong>port USB HS (entrée connectique)</strong>, <strong>oxydation / immersion</strong>, pièce coincée / circuit encrassé (mauvais entretien), défaut de montage, appareil acheté à l'étranger ou marque non distribuée en France, rappel de parc constructeur.</p>
+    <p><strong>❌ Refusées (exemples officiels) :</strong> dommage esthétique ou n'empêchant pas le fonctionnement (revêtement griffé, impact sur porte — le <strong>verre arrière endommagé</strong> reste éligible chez Apple : il intègre le module lentille photo / MagSafe, composant fonctionnel), batterie <strong>amovible</strong> (VAE, outillage), chargeur/câble amovible, cartouche, ampoule/LED (y compris barre de LED de TV), objectif photo, vente de pièce seule sans acte de réparation, mises à jour et logiciels, <strong>port USB HS (entrée connectique)</strong>, <strong>oxydation / immersion</strong>, pièce coincée / circuit encrassé (mauvais entretien), défaut de montage, appareil acheté à l'étranger ou marque non distribuée en France, rappel de parc constructeur.</p>
     <p><strong>Conditions produit :</strong> plaque signalétique ou IMEI lisible (plaque effacée / marquée « HS » → refus), appareil détenu par un <strong>ménage</strong>, non couvert par une assurance, conforme à la réglementation.</p>
     <p><a href="https://www.ecosystem.eco/document/257" target="_blank" rel="noopener">PDF officiel — appareil et panne éligibles (exemples)</a> · <a href="https://www.ecosystem.eco/document/56" target="_blank" rel="noopener">Grille des montants (PDF)</a></p>` });
 
