@@ -234,6 +234,32 @@ const QUESTIONS = [
     ]
   },
   {
+    id: "bonus-product",
+    modes: ["bonus"],
+    label: "Produit à réparer",
+    options: [
+      { value: "iphone", label: "iPhone" },
+      { value: "ipad", label: "iPad" },
+      { value: "mac-portable", label: "Mac (portable)" },
+      { value: "mac-fixe", label: "Mac (fixe / tout-en-un)" },
+      { value: "moniteur", label: "Moniteur Apple (Studio Display…)" },
+      { value: "tablette-autre", label: "Tablette (autre marque)" },
+      { value: "telephone-autre", label: "Téléphone (autre marque)" },
+      { value: "autre-hors", label: "Autre appareil (électroménager, TV, console…)" }
+    ]
+  },
+  {
+    id: "bonus-context",
+    modes: ["bonus"],
+    label: "Situation",
+    options: [
+      { value: "apple-store", label: "Réparation en Apple Store (Genius Bar)" },
+      { value: "qualirepar", label: "Réparateur indépendant labellisé QualiRépar" },
+      { value: "sous-garantie", label: "Appareil encore sous garantie (légale, constructeur ou AppleCare)" },
+      { value: "soi-meme", label: "Le client veut réparer lui-même (pièce achetée)" }
+    ]
+  },
+  {
     id: "purchase",
     modes: ["garantie"],
     label: "Lieu d'achat",
@@ -1136,6 +1162,7 @@ function buildQuestionnaire() {
       <select id="mode-select" aria-label="Type de demande">
         <option value="garantie">Garantie légale &amp; réparation</option>
         <option value="retour">Retour 14 jours &amp; rétractation</option>
+        <option value="bonus">Bonus réparation</option>
       </select>
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     `;
@@ -1143,7 +1170,7 @@ function buildQuestionnaire() {
   const modeSel = modeBox.querySelector('select');
   const modeVal = modeBox.querySelector('.value');
   modeSel.value = state.mode;
-  modeVal.textContent = state.mode === 'retour' ? 'Retour 14 jours & rétractation' : 'Garantie légale & réparation';
+  modeVal.textContent = state.mode === 'retour' ? 'Retour 14 jours & rétractation' : state.mode === 'bonus' ? 'Bonus réparation' : 'Garantie légale & réparation';
   modeSel.addEventListener('change', e => {
     state.mode = e.target.value;
     buildQuestionnaire();
@@ -1173,9 +1200,90 @@ function buildQuestionnaire() {
   });
 }
 
+function getResultBonus(s) {
+  // Bonus Réparation (fonds Réparation, écosystésystem / ADEME) — montants en vigueur 2025
+  // Source : ecosystem.eco (éco-organisme opérateur), label-qualirepar.fr
+  // Apple Store France labellisé QualiRépar depuis juillet 2025 (bonus applicable en Genius Bar)
+  const verdict = "partial";
+  let title = "Bonus réparation — conditions d'application";
+  const summary = `Le <strong>Bonus Réparation</strong> est une réduction <strong>immédiate</strong> déduite de la facture, financée par l'éco-organisme ecosystem, uniquement chez un réparateur <strong>labellisé QualiRépar</strong> et pour un appareil <strong>hors garantie</strong>. Les Apple Store de France sont labellisés depuis juillet 2025.`;
+  const cards = [];
+
+  // Montants Apple
+  const amounts = {
+    "iphone": { label: "iPhone", amount: "25 €", cond: "réparation éligible (écran, batterie inamovible, casse empêchant le fonctionnement…)" },
+    "ipad": { label: "iPad", amount: "25 €", cond: "réparation éligible — même grille que les tablettes" },
+    "mac-portable": { label: "Mac portable", amount: "50 €", cond: "seuil de déclenchement : devis ≥ 150 €" },
+    "mac-fixe": { label: "Mac fixe / tout-en-un", amount: "50 €", cond: "seuil de déclenchement : devis ≥ 150 €" },
+    "moniteur": { label: "Moniteur", amount: "30 €", cond: "seuil de déclenchement : devis ≥ 100 €" }
+  };
+
+  const p = s["bonus-product"];
+  const ctx = s["bonus-context"];
+
+  // Carte 1 : le verdict selon la situation
+  if (ctx === "sous-garantie") {
+    cards.push({ title: "Appareil sous garantie — bonus NON applicable", tag: "amber", tagLabel: "Hors bonus", body: `
+      <p>Le Bonus Réparation s'applique <strong>uniquement hors garantie</strong> (légale de conformité, constructeur commerciale, AppleCare+). Un appareil couvert relève de sa garantie : la réparation doit être <strong>gratuite</strong> chez le vendeur ou le constructeur — le bonus n'a pas vocation à s'appliquer.</p>
+      <p><strong>En Genius Bar :</strong> vérifier la couverture avant de parler bonus (statut sur le reçu ou coverage.apple.com). Si hors garantie ET panne éligible, le bonus s'applique automatiquement à la facture.</p>` });
+  } else if (ctx === "soi-meme") {
+    cards.push({ title: "Réparation soi-même — bonus NON applicable", tag: "amber", tagLabel: "Hors bonus", body: `
+      <p>Le bonus est réservé aux réparations effectuées <strong>par un professionnel labellisé QualiRépar</strong>. L'achat d'une pièce pour réparer soi-même n'ouvre aucun droit au bonus.</p>
+      <p><strong>À proposer en alternative :</strong> l'orientation vers un réparateur labellisé proche (recherche sur label-qualirepar.fr), ou l'indice de réparabilité du produit.</p>` });
+  } else if (ctx === "apple-store") {
+    cards.push({ title: "Apple Store = QualiRépar : bonus applicable", tag: "green", tagLabel: "Bonus OK", body: `
+      <p>Les <strong>Apple Store de France sont labellisés QualiRépar</strong> (depuis juillet 2025) : le bonus est <strong>déduit automatiquement de la facture</strong> pour les réparations éligibles d'iPhone et iPad (25 €), de Mac (50 €, devis ≥ 150 €) et des moniteurs (30 €, devis ≥ 100 €), <strong>hors garantie</strong>.</p>
+      <p><strong>Cas typiques en Genius Bar :</strong> écran cassé hors garantie, batterie inamovible hors garantie — bonus déduit sans démarche du client.</p>
+      <p><strong>Conditions transverses :</strong> appareil avec plaque signalétique / IMEI, non couvert par une assurance, panne éligible (pas d'ordre esthétique, pas de défaut d'environnement).</p>
+      <p><a href="https://www.apple.com/fr/legal/sales-support/sales-policies/retail_fr.html" target="_blank" rel="noopener">CGV Apple Store France</a></p>` });
+  } else if (ctx === "qualirepar") {
+    cards.push({ title: "Réparateur QualiRépar indépendant — bonus applicable", tag: "green", tagLabel: "Bonus OK", body: `
+      <p>Le réparateur labellisé applique le bonus <strong>immédiatement sur la facture</strong> : iPhone/tablette/téléphone <strong>25 €</strong>, Mac <strong>50 €</strong> (devis ≥ 150 €), moniteur <strong>30 €</strong> (devis ≥ 100 €), selon la grille officielle ecosystem.</p>
+      <p><strong>Vérifications :</strong> appareil hors garantie, panne éligible (pas de remplacement esthétique, pas de consommable, pas de panne logicielle), appareil conforme (pas de contrefaçon).</p>
+      <p><strong>Garantie de la réparation :</strong> 3 mois minimum chez un réparateur QualiRépar (1 an chez WeFix pour la plupart des réparations, 3 mois pour les batteries).</p>
+      <p><a href="https://www.label-qualirepar.fr/particulier/bonusreparation.html" target="_blank" rel="noopener">Montants officiels — label-qualirepar.fr</a></p>` });
+  }
+
+  // Carte 2 : le montant selon le produit
+  if (amounts[p]) {
+    const a = amounts[p];
+    cards.push({ title: `Montant pour ${a.label} : ${a.amount}`, tag: "green", tagLabel: "Grille ecosystem", body: `
+      <p><strong>Bonus : ${a.amount}</strong> — ${a.cond}.</p>
+      <p>Déduction <strong>immédiate et visible sur la facture</strong>, uniquement hors garantie et chez un réparateur labellisé (Apple Store ou indépendant QualiRépar).</p>` });
+  } else if (p === "tablette-autre") {
+    cards.push({ title: "Tablette autre marque : 25 €", tag: "green", tagLabel: "Grille ecosystem", body: `
+      <p>Les tablettes (toutes marques) bénéficient de <strong>25 €</strong> de bonus chez un réparateur QualiRépar, hors garantie et pour une panne éligible.</p>` });
+  } else if (p === "telephone-autre") {
+    cards.push({ title: "Téléphone autre marque : 25 €", tag: "green", tagLabel: "Grille ecosystem", body: `
+      <p>Les téléphones portables (toutes marques) bénéficient de <strong>25 €</strong> de bonus. Écrans cassés éligibles depuis le 1er janvier 2024.</p>` });
+  } else if (p === "autre-hors") {
+    cards.push({ title: "Autre appareil — hors périmètre Apple", tag: "amber", tagLabel: "Vérifier la grille", body: `
+      <p>Le Fonds Réparation couvre <strong>261 objets</strong> (électroménager 15-50 €, TV, consoles 20 €, vélos électriques 15-30 €…). Grille complète et montants sur le site officiel.</p>
+      <p><a href="https://www.ecosystem.eco/comprendre/bonus-reparation" target="_blank" rel="noopener">Grille officielle ecosystem</a></p>` });
+  }
+
+  // Carte commune : pannes éligibles / non éligibles
+  cards.push({ title: "Pannes éligibles et non éligibles", tag: null, tagLabel: "", body: `
+    <p><strong>Éligibles :</strong> écrans cassés (dont téléphones depuis 2024, TV et écrans d'ordinateur), casses empêchant le fonctionnement (hublot, poignée, vitre), remplacement des batteries <strong>inamovibles</strong>.</p>
+    <p><strong>Non éligibles :</strong> dommages esthétiques ou n'empêchant pas le fonctionnement, remplacement de consommables/accessoires/batteries <strong>amovibles</strong>, pannes liées à l'environnement (défaut électrique, installation), opérations de maintenance <strong>logicielle</strong>, dommages relevant des garanties légales ou de vices cachés.</p>
+    <p><strong>Toujours :</strong> déduction immédiate sur la facture, appareil hors garantie, réparateur labellisé.</p>` });
+
+  return { verdict, title, summary, cards };
+}
+
 function renderResult() {
   const panel = document.getElementById('result-panel');
   const panel2 = panel;
+  if (state.mode === "bonus") {
+    const bp = state["bonus-product"];
+    const bc = state["bonus-context"];
+    if (!bp || !bc) {
+      panel.innerHTML = `<div class="result-placeholder">Choisissez le <strong>produit à réparer</strong> et la <strong>situation</strong> pour afficher le montant du bonus et son application.</div>`;
+      return;
+    }
+    showResult(panel2, getResultBonus(state));
+    return;
+  }
   if (state.mode === "retour") {
     const hasRetract = state.retract && state.retract !== "none";
     const hasEnseigne = state.enseigne && state.enseigne !== "none";
