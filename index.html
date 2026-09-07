@@ -234,6 +234,15 @@ const QUESTIONS = [
     ]
   },
   {
+    id: "bonus-status",
+    modes: ["bonus"],
+    label: "Statut du client",
+    options: [
+      { value: "particulier", label: "Particulier (achat et usage personnel)" },
+      { value: "professionnel", label: "Professionnel (appareil d'une entreprise, SARL, micro-entreprise…)" }
+    ]
+  },
+  {
     id: "bonus-product",
     modes: ["bonus"],
     label: "Produit à réparer",
@@ -1233,8 +1242,23 @@ function buildQuestionnaire() {
 
 function getResultBonus(s) {
   // Validation d'éligibilité au Bonus Réparation en Apple Store (labellisé QualiRépar 07/2025)
-  // Règles : ecosystem (fonds Réparation) — hors garantie, panne éligible, appareil conforme
+  // Règles : ecosystem (fonds Réparation) — PARTICULIERS uniquement, hors garantie, panne éligible
+  const bs = s["bonus-status"];
   const bp = s["bonus-product"], bw = s["bonus-warranty"], br = s["bonus-repair"], bc = s["bonus-cause"], bq = s["bonus-quote"];
+
+  // ===== BLOCAGE 0 : professionnel =====
+  if (bs === "professionnel") {
+    return { verdict: "not-eligible", title: "Client professionnel — bonus non applicable",
+      summary: `Le <strong>Bonus Réparation est réservé aux particuliers</strong> : il ne s'applique pas aux équipements d'une entreprise (SARL, EURL, micro-entreprise, société…), y compris pour un MacBook ou un iPhone professionnel. Sources : ADEME (quefairedemesdechets.ademe.fr) et ecologie.gouv.fr.`,
+      cards: [
+        { title: "Que faire pour un appareil professionnel", tag: "blue", tagLabel: "Alternatives", body: `
+          <p><strong>Réparation payante classique</strong> en Apple Store ou chez un prestataire agréé — facturée à l'entreprise, souvent récupérable en charges (TVA déductible sur le devis).</p>
+          <p><strong>Vérifier les garanties :</strong> garantie légale de conformité (2 ans, également due aux professionnels non-éclairés pour certains biens), garantie constructeur, ou extension d'entreprise.</p>
+          <p><strong>Assurance / flotte :</strong> si l'entreprise couvre ses équipements (multirisque pro, flotte AppleCare for Business), orienter vers la déclaration de sinistre.</p>
+          <p><strong>À noter :</strong> un artisan ou commerçant <em>réparateur</em> peut se faire labelliser QualiRépar pour proposer le bonus <em>à ses clients particuliers</em> — mais jamais pour son propre équipement.</p>
+          <p><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F37980" target="_blank" rel="noopener">Service-public Entreprendre — fonds réparation</a></p>` } ] };
+  }
+
   const amounts = { "iphone": ["iPhone", "25 €"], "ipad": ["iPad", "25 €"], "mac-portable": ["Mac portable", "50 €"], "mac-fixe": ["Mac fixe / tout-en-un", "50 €"], "moniteur": ["Moniteur", "30 €"] };
   const thresholds = { "mac-portable": 150, "mac-fixe": 150, "moniteur": 100 };
   const pLabel = amounts[bp] ? amounts[bp][0] : "l'appareil";
@@ -1301,6 +1325,7 @@ function getResultBonus(s) {
     : `Un dommage causé par un <strong>facteur externe</strong> (défaut électrique, installation, environnement) ou un <strong>usage non conforme</strong> du client n'ouvre pas droit au bonus.`;
 
   cards.push({ title: `Récapitulatif — ${pLabel} (${pAmount})`, tag: verdict === "eligible" ? "green" : verdict === "partial" ? "amber" : "red", tagLabel: verdict === "eligible" ? "Bonus OK" : verdict === "partial" ? "Seuil" : "Refusé", body: `
+    <p><strong>Client :</strong> particulier ✓ (le bonus est réservé aux particuliers — les équipements d'entreprise sont exclus).</p>
     <p><strong>Produit :</strong> ${pLabel} — bonus de référence ${pAmount}.</p>
     <p><strong>Statut :</strong> hors garantie (légale et constructeur) ✓</p>
     <p><strong>Intervention :</strong> ${ { "ecran": "remplacement d'écran (éligible depuis 2024 pour les téléphones, désormais TV et écrans)", "batterie": "batterie inamovible (éligible)", "casse": "casse empêchant le fonctionnement (éligible)", "panne": "panne fonctionnelle (éligible)" }[br] || "" }</p>
@@ -1322,10 +1347,10 @@ function renderResult() {
   if (state.mode === "bonus") {
     const bp = state["bonus-product"];
     const bc = state["bonus-context"];
-    const bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"], bqs = state["bonus-quote"];
-    if (!bp || !bws || !brs || !bcs || !bqs) {
-      const answered = [bp, bws, brs, bcs, bqs].filter(Boolean).length;
-      panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${5 - answered} question${5 - answered > 1 ? 's' : ''} restante${5 - answered > 1 ? 's' : ''} pour valider le bonus.</div>`;
+    const bss = state["bonus-status"], bws = state["bonus-warranty"], brs = state["bonus-repair"], bcs = state["bonus-cause"], bqs = state["bonus-quote"];
+    const bAns = [bss, bp, bws, brs, bcs, bqs].filter(Boolean).length;
+    if (bAns < 6) {
+      panel.innerHTML = `<div class="result-placeholder">Questionnaire d'éligibilité — ${6 - bAns} question${6 - bAns > 1 ? 's' : ''} restante${6 - bAns > 1 ? 's' : ''} pour valider le bonus.</div>`;
       return;
     }
     showResult(panel2, getResultBonus(state));
