@@ -10,22 +10,24 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" href="favicon.png" sizes="180x180">
 <title>Genius Bar — Guide loi de réparation</title>
+<link rel="stylesheet" href="./assets/css/shared-theme.css">
 <style>
   :root{
-    --bg:#f5f5f7; --surface:#ffffff; --surface-2:#fbfbfd; --text:#1d1d1f;
-    --text-secondary:#6e6e73; --accent:#0071e3; --accent-hover:#0077ed;
-    --ac-red:#d70015; --ac-green:#34c759; --ac-orange:#ff9500;
-    --border:#d2d2d7; --border-soft:#e8e8ed;
-    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 12px rgba(0,0,0,.04);
+    /* Mappé sur le thème Mayday (shared-theme.css) — Liquid Glass */
+    --bg:#f5f5f7; --surface:var(--apple-card-bg, #ffffff); --surface-2:#fbfbfd; --text:#1d1d1f;
+    --text-secondary:#86868b; --accent:#007AFF; --accent-hover:#0056CC;
+    --ac-red:#FF3B30; --ac-green:#34C759; --ac-orange:#FF9500;
+    --border:#d2d2d7; --border-soft:var(--glass-border-solid, #E5E5EA);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#000000; --surface:#1d1d1f; --surface-2:#161617; --text:#f5f5f7;
-      --text-secondary:#98989d; --accent:#2997ff; --accent-hover:#4facff;
+      --bg:#000000; --surface:var(--apple-card-bg, #1d1d1f); --surface-2:#161617; --text:#f5f5f7;
+      --text-secondary:#a1a1a6; --accent:#0A84FF; --accent-hover:#4facff;
       --ac-red:#ff453a; --ac-green:#30d158; --ac-orange:#ff9f0a;
       --border:#3d3d3f; --border-soft:#2c2c2e;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 12px rgba(0,0,0,.3);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
   }
   *{box-sizing:border-box;} html,body{margin:0;padding:0;}
@@ -43,7 +45,7 @@
   .topbar-inner{ max-width:720px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:10px; }
   .apple-logo{ width:15px; height:18px; flex-shrink:0; opacity:.92; }
   .topbar-label{ font-size:13px; font-weight:600; color:var(--text-secondary); letter-spacing:-0.01em; }
-  .wrap{ max-width:720px; margin:0 auto; padding:52px 24px 64px; }
+  .wrap{ max-width:720px; margin:0 auto; padding:120px 24px 64px; }
   h1{ font-size:30px; line-height:1.1; letter-spacing:-0.015em; font-weight:600; margin:0 0 8px; text-align:center; }
   .subtitle{ text-align:center; font-size:14px; color:var(--text-secondary); margin:0 0 36px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.45; }
 
@@ -146,8 +148,8 @@
   ::selection{ background:color-mix(in srgb, var(--accent) 30%, transparent); }
 
   @media(max-width:480px){
-    .topbar-inner{ padding:12px 16px; }
-    .wrap{ padding:32px 16px 40px; }
+    
+    .wrap{ padding:88px 16px 40px; }
     h1{ font-size:24px; }
     .subtitle{ font-size:12.5px; margin-bottom:24px; }
     .select-group{ gap:10px; }
@@ -161,12 +163,9 @@
   }
 </style>
 </head>
-<body>
+<body class="needs-global-nav">
 
-<div class="topbar"><div class="topbar-inner">
-  <svg class="apple-logo" viewBox="0 0 170 170" fill="currentColor"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.96-3.17-14.32-3.17-4.57 0-9.47 1.05-14.71 3.17-5.25 2.13-9.48 3.24-12.71 3.34-4.93.21-9.84-1.96-14.74-6.51-3.13-2.73-7.05-7.41-11.76-14.04-5.06-7.08-9.22-15.29-12.47-24.65-3.48-10.09-5.22-19.86-5.22-29.32 0-10.83 2.34-20.17 7.03-28 3.68-6.28 8.58-11.24 14.71-14.88 6.13-3.64 12.76-5.5 19.9-5.62 3.92 0 9.06 1.21 15.44 3.6 6.36 2.4 10.44 3.61 12.22 3.61 1.33 0 5.85-1.42 13.53-4.25 7.26-2.63 13.39-3.72 18.4-3.27 13.6 1.1 23.83 6.46 30.65 16.09-12.16 7.37-18.18 17.69-18.06 30.93.11 10.32 3.86 18.9 11.24 25.71 3.35 3.18 7.09 5.64 11.24 7.39-.9 2.61-1.85 5.11-2.86 7.51zM119.11 5.36c0 8.09-2.96 15.64-8.86 22.64-7.12 8.32-15.72 13.13-25.05 12.37-.12-.95-.19-1.95-.19-3 0-7.77 3.39-16.09 9.4-22.89 3-3.44 6.82-6.3 11.45-8.56C110.47.98 114.84-.24 118.94.01c.14.01.14.44.17 5.35z"/></svg>
-  <span class="topbar-label">Genius Bar — Guide réparation</span>
-</div></div>
+
 
 <div class="wrap">
   <h1>Guide loi de réparation</h1>
@@ -1399,5 +1398,6 @@ function showResult(panel, r) {
 
 buildQuestionnaire();
 </script>
+  <script src="./assets/js/shared-app.js"></script>
 </body>
 </html>
